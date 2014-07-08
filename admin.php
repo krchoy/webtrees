@@ -96,6 +96,16 @@ $user_languages = WT_DB::prepare(
 $stats = new WT_Stats(WT_GEDCOM);
 
 ?>
+
+	<div class="col-xs-4">
+		<?php echo /* I18N: The local time on the server */ WT_I18N::translate('Server time'), ' — ', format_timestamp(WT_SERVER_TIMESTAMP); ?>
+		<br>
+		<?php echo /* I18N: The local time on the client/browser */ WT_I18N::translate('Client time'), ' — ', format_timestamp(WT_CLIENT_TIMESTAMP); ?>
+		<br>
+		<?php echo /* I18N: Timezone - http://en.wikipedia.org/wiki/UTC */ WT_I18N::translate('UTC'), ' — ', format_timestamp(WT_TIMESTAMP); ?>
+	</div>
+
+
 <div id="content_container" style="visibility: hidden;">
 	<div id="x">
 		<h2><?php echo WT_WEBTREES, ' ', WT_VERSION; ?></h2>

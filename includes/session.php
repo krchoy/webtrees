@@ -59,13 +59,20 @@ if (WT_USE_GOOGLE_API) {
 	define('WT_JQUERY_URL',        WT_STATIC_URL . 'js/jquery-1.11.1.js');
 	define('WT_JQUERYUI_URL',      WT_STATIC_URL . 'js/jquery-ui-1.10.4.js');
 }
-define('WT_JQUERY_COLORBOX_URL',   WT_STATIC_URL . 'js/jquery.colorbox-1.5.9.js');
-define('WT_JQUERY_COOKIE_URL',     WT_STATIC_URL . 'js/jquery.cookie-1.4.1.js');
-define('WT_JQUERY_DATATABLES_URL', WT_STATIC_URL . 'js/jquery.datatables-1.10.3.js');
-define('WT_JQUERY_JEDITABLE_URL',  WT_STATIC_URL . 'js/jquery.jeditable-1.7.3.js');
-define('WT_JQUERY_WHEELZOOM_URL',  WT_STATIC_URL . 'js/jquery.wheelzoom-2.0.0.js');
-define('WT_MODERNIZR_URL',         WT_STATIC_URL . 'js/modernizr.custom-2.6.2.js');
-define('WT_WEBTREES_JS_URL',       WT_STATIC_URL . 'js/webtrees-1.6.0.js');
+define('WT_BOOTSTRAP_CSS_URL',               WT_STATIC_URL . 'bootstrap-3.3.0/css/bootstrap.min.css');
+define('WT_BOOTSTRAP_JS_URL',                WT_STATIC_URL . 'bootstrap-3.3.0/js/bootstrap.min.js');
+define('WT_BOOTSTRAP_RTL_CSS_URL',           WT_STATIC_URL . 'bootstrap-rtl-3.2.0/css/bootstrap-rtl.min.css');
+define('WT_DATATABLES_BOOTSTRAP_JS_URL',     WT_STATIC_URL . 'datatables-1.10.0/plugins/datatables.bootstrap.js');
+define('WT_DATATABLES_BOOTSTRAP_CSS_URL',    WT_STATIC_URL . 'datatables-1.10.0/plugins/datatables.bootstrap.css');
+define('WT_DATATABLES_JS_URL',               WT_STATIC_URL . 'datatables-1.10.0/jquery.datatables.js');
+define('WT_FONT_AWESOME_CSS_URL',            WT_STATIC_URL . 'font-awesome-4.1.0/css/font-awesome.min.css');
+define('WT_JQUERY_COLORBOX_URL',   WT_STATIC_URL.'js/jquery.colorbox-1.5.9.js');
+define('WT_JQUERY_COOKIE_URL',     WT_STATIC_URL.'js/jquery.cookie-1.4.1.js');
+define('WT_JQUERY_DATATABLES_URL', WT_STATIC_URL.'datatables-1.10.0/jquery.datatables.js');
+define('WT_JQUERY_JEDITABLE_URL',  WT_STATIC_URL.'js/jquery.jeditable-1.7.3.js');
+define('WT_JQUERY_WHEELZOOM_URL',  WT_STATIC_URL.'js/jquery.wheelzoom-2.0.0.js');
+define('WT_MODERNIZR_URL',         WT_STATIC_URL.'js/modernizr.custom-2.6.2.js');
+define('WT_WEBTREES_JS_URL',       WT_STATIC_URL.'js/webtrees-1.6.0.js');
 
 // Location of our modules and themes.  These are used as URLs and folder paths.
 define('WT_MODULES_DIR', 'modules_v3/'); // Update setup.php and build/Makefile when this changes
