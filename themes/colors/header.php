@@ -21,6 +21,7 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+use WT\Assets;
 use WT\Auth;
 
 if (!defined('WT_WEBTREES')) {
@@ -31,13 +32,15 @@ if (!defined('WT_WEBTREES')) {
 global $subColor;
 
 // This theme uses the jQuery “colorbox” plugin to display images
-$this
-	->addExternalJavascript(WT_JQUERY_COLORBOX_URL)
-	->addExternalJavascript(WT_JQUERY_WHEELZOOM_URL)
-	->addInlineJavascript('activate_colorbox();')
-	->addInlineJavascript('jQuery.extend(jQuery.colorbox.settings, {width:"85%", height:"85%", transition:"none", slideshowStart:"'. WT_I18N::translate('Play').'", slideshowStop:"'. WT_I18N::translate('Stop').'"})')
+Assets::addCss(WT_THEME_URL . 'jquery-ui-1.10.3/jquery-ui-1.10.3.custom.css');
+Assets::addCss(WT_CSS_URL . 'css/colors.css');
+Assets::addCss(WT_CSS_URL . 'css/' . $subColor . '.css');
+Assets::addJs(WT_JQUERY_COLORBOX_URL);
+Assets::addJs(WT_JQUERY_WHEELZOOM_URL);
+Assets::addInlineJs('activate_colorbox();');
+Assets::addInlineJs('jQuery.extend(jQuery.colorbox.settings, {width:"85%", height:"85%", transition:"none", slideshowStart:"'. WT_I18N::translate('Play').'", slideshowStop:"'. WT_I18N::translate('Stop').'"})');
 
-	->addInlineJavascript('
+Assets::addInlineJs('
 		jQuery.extend(jQuery.colorbox.settings, {
 			title:	function(){
 					var img_title = jQuery(this).data("title");
@@ -45,6 +48,16 @@ $this
 			}
 		});
 	');
+// Remove list from home when only 1 gedcom
+Assets::addInlineJs('if (jQuery("#menu-tree ul li").length == 2) jQuery("#menu-tree ul li:last-child").remove();');
+
+if (stristr($_SERVER['HTTP_USER_AGENT'], 'iPad')) {
+	Assets::AddCss(WT_CSS_URL, 'ipad.css');
+} elseif (stristr($_SERVER['HTTP_USER_AGENT'], 'MSIE') || stristr($_SERVER['HTTP_USER_AGENT'], 'Trident')) {
+	// This is needed for all versions of IE, so we cannot use conditional comments.
+	Assets::AddCss(WT_CSS_URL, 'msie.css');
+}
+
 echo
 	'<!DOCTYPE html>',
 	'<html ', WT_I18N::html_markup(), '>',
@@ -54,16 +67,10 @@ echo
 	'<title>', WT_Filter::escapeHtml($title), '</title>',
 	header_links($META_DESCRIPTION, $META_ROBOTS, $META_GENERATOR, $LINK_CANONICAL),
 	'<link rel="icon" href="', WT_CSS_URL, 'favicon.png" type="image/png">',
-	'<link rel="stylesheet" href="', WT_THEME_URL, 'jquery-ui-1.10.3/jquery-ui-1.10.3.custom.css" type="text/css">',
-	'<link rel="stylesheet" href="', WT_CSS_URL, 'css/colors.css" type="text/css">',
-	'<link rel="stylesheet" href="', WT_CSS_URL, 'css/',  $subColor,  '.css" type="text/css">';
+	Assets::css();
 
 if (stristr($_SERVER['HTTP_USER_AGENT'], 'iPad')) {
 	echo '<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.8, maximum-scale=2.0" />';
-	echo '<link type="text/css" rel="stylesheet" href="', WT_CSS_URL, 'ipad.css">';
-} elseif (stristr($_SERVER['HTTP_USER_AGENT'], 'MSIE') || stristr($_SERVER['HTTP_USER_AGENT'], 'Trident')) {
-	// This is needed for all versions of IE, so we cannot use conditional comments.
-	echo '<link type="text/css" rel="stylesheet" href="', WT_CSS_URL, 'msie.css">';
 }
 
 echo
@@ -148,13 +155,8 @@ if  ($view!='simple') { // Use "simple" headers for popup windows
 	echo
 		'</ul>';
 }
-// Remove list from home when only 1 gedcom
-$this->addInlineJavaScript(
-	'if (jQuery("#menu-tree ul li").length == 2) jQuery("#menu-tree ul li:last-child").remove();'
-);
 
 echo
-	$javascript,
 	WT_FlashMessages::getHtmlMessages(), // Feedback from asynchronous actions
 	'<div id="content">';
 

@@ -21,6 +21,8 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+use WT\Assets;
+
 define('WT_SCRIPT_NAME', 'pedigree.php');
 require './includes/session.php';
 require WT_ROOT . 'includes/functions/functions_edit.php';
@@ -31,10 +33,10 @@ define("MENU_ITEM"    , "<a href='pedigree.php?rootid=%s&amp;show_full=%s&amp;PE
 define("BOX_WRAPPER"  , "<div class='shadow' style='%s:%spx; top:%spx; width:%spx; height:%spx'>");
 
 $controller = new WT_Controller_Pedigree();
-$controller
-	->pageHeader()
-	->addExternalJavascript(WT_STATIC_URL . 'js/autocomplete.js')
-	->addInlineJavascript('autocomplete();');
+$controller->pageHeader();
+
+Assets::addJs(WT_STATIC_URL . 'js/autocomplete.js');
+Assets::addInlineJs('autocomplete();');
 
 ?>
 <div id="pedigree-page">
@@ -250,7 +252,7 @@ echo '</div>'; //close #pedigree_chart
 echo '</div>'; //close #pedigree-page
 
 // Expand <div id="content"> to include the absolutely-positioned elements.
-$controller->addInlineJavascript('
+Assets::addInlineJs('
 	var WT_PEDIGREE_CHART = (function() {
 	jQuery("html").css("overflow","visible"); // workaround for chrome v37 canvas bugs
 	jQuery("#content").css("height", "' . ($maxyoffset + 30) . '");

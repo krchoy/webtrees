@@ -22,6 +22,7 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 use WT\Auth;
+use WT\Assets;
 
 class charts_WT_Module extends WT_Module implements WT_Module_Block {
 	// Extend class WT_Module
@@ -72,7 +73,7 @@ class charts_WT_Module extends WT_Module implements WT_Module_Block {
 
 		if ($type!='treenav' && $person) {
 			$chartController = new WT_Controller_Hourglass($person->getXref(), 0, false);
-			$controller->addInlineJavascript($chartController->setupJavascript());
+			Assets::addInlineJs($chartController->setupJavascript());
 		}
 
 		$id=$this->getName().$block_id;
@@ -129,10 +130,10 @@ class charts_WT_Module extends WT_Module implements WT_Module_Block {
 				$tv=new TreeView;
 				$content .= '<td>';
 
-				$content .= '<script>jQuery("head").append(\'<link rel="stylesheet" href="'.$mod->css().'" type="text/css" />\');</script>';
-				$content .= '<script src="'.$mod->js().'"></script>';
+				Assets::addCs($mod->css());
+				Assets::addJss($mod->js());
 				list($html, $js) = $tv->drawViewport($person, 2);
-				$content .= $html.'<script>'.$js.'</script>';
+				Assets::addJss($js);
 				$content .= '</td>';
 			}
 			$content .= "</tr></table>";
@@ -185,9 +186,8 @@ class charts_WT_Module extends WT_Module implements WT_Module_Block {
 		$type    = get_block_setting($block_id, 'type', 'pedigree');
 		$pid     = get_block_setting($block_id, 'pid', Auth::check() ? (WT_USER_GEDCOM_ID ? WT_USER_GEDCOM_ID : $PEDIGREE_ROOT_ID) : $PEDIGREE_ROOT_ID);
 
-		$controller
-			->addExternalJavascript(WT_STATIC_URL . 'js/autocomplete.js')
-			->addInlineJavascript('autocomplete();');
+		Assets::addJs(WT_STATIC_URL . 'js/autocomplete.js');
+		Assets::addInlineJs('autocomplete();');
 	?>
 		<tr><td class="descriptionbox wrap width33"><?php echo WT_I18N::translate('Chart type'); ?></td>
 		<td class="optionbox">

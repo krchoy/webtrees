@@ -23,6 +23,7 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+use WT\Assets;
 use WT\Auth;
 
 define('WT_SCRIPT_NAME', 'editnews.php');
@@ -45,7 +46,7 @@ $text      = WT_Filter::post('text');
 switch ($action) {
 case 'compose':
 	if (array_key_exists('ckeditor', WT_Module::getActiveModules())) {
-		ckeditor_WT_Module::enableEditor($controller);
+		ckeditor_WT_Module::enableEditor();
 	}
 
 	echo '<h3>' . WT_I18N::translate('Add/edit a journal/news entry') . '</h3>';
@@ -81,6 +82,6 @@ case 'save':
 		WT_DB::prepare("INSERT INTO `##news` (user_id, gedcom_id, subject, body) VALUES (NULLIF(?, ''), NULLIF(?, '') ,? ,?)")->execute(array($user_id, $gedcom_id, $title, $text));
 	}
 
-	$controller->addInlineJavascript('window.opener.location.reload();window.close();');
+	Assets::addInlineJs('window.opener.location.reload();window.close();');
 	break;
 }

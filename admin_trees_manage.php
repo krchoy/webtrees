@@ -18,6 +18,7 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+use WT\Assets;
 use WT\Auth;
 use WT\User;
 
@@ -198,13 +199,13 @@ foreach (WT_Tree::GetAll() as $tree) {
 			)->execute(array($tree->tree_id))->fetchOne();
 			if (!$in_progress) {
 				echo '<div id="import', $tree->tree_id, '"><div id="progressbar', $tree->tree_id, '"><div style="position:absolute;">', WT_I18N::translate('Deleting old genealogy data…'), '</div></div></div>';
-				$controller->addInlineJavascript(
+				Assets::addInlineJs(
 				'jQuery("#progressbar'.$tree->tree_id.'").progressbar({value: 0});'
 			);
 			} else {
 				echo '<div id="import', $tree->tree_id, '"></div>';
 			}
-			$controller->addInlineJavascript(
+			Assets::addInlineJs(
 				'jQuery("#import'.$tree->tree_id.'").load("import.php?gedcom_id='.$tree->tree_id.'&keep_media'.$tree->tree_id.'='.WT_Filter::get('keep_media'.$tree->tree_id).'");'
 			);
 			echo '<table border="0" width="100%" id="actions', $tree->tree_id, '" style="display:none">';

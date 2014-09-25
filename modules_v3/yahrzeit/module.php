@@ -24,6 +24,7 @@
 use Fisharebest\ExtCalendar\JewishCalendar;
 use Rhumsaa\Uuid\Uuid;
 use WT\Auth;
+use WT\Assets;
 
 class yahrzeit_WT_Module extends WT_Module implements WT_Module_Block {
 	// Extend class WT_Module
@@ -38,7 +39,7 @@ class yahrzeit_WT_Module extends WT_Module implements WT_Module_Block {
 
 	// Implement class WT_Module_Block
 	public function getBlock($block_id, $template=true, $cfg=null) {
-		global $ctype, $controller;
+		global $ctype;
 
 		$days      = get_block_setting($block_id, 'days',       7);
 		$infoStyle = get_block_setting($block_id, 'infoStyle', 'table');
@@ -121,9 +122,9 @@ class yahrzeit_WT_Module extends WT_Module implements WT_Module_Block {
 		case 'table':
 		default:
 			$table_id = Uuid::uuid4(); // table requires a unique ID
-			$controller
-				->addExternalJavascript(WT_JQUERY_DATATABLES_URL)
-				->addInlineJavascript('
+
+			Assets::addJs(WT_JQUERY_DATATABLES_URL);
+			Assets::addInlineJs('
 					jQuery("#'.$table_id.'").dataTable({
 						dom: \'t\',
 						'.WT_I18N::datatablesI18N().',

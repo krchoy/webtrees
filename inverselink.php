@@ -23,6 +23,7 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+use WT\Assets;
 use WT\Auth;
 
 define('WT_SCRIPT_NAME', 'inverselink.php');
@@ -33,9 +34,10 @@ $controller = new WT_Controller_Simple();
 $controller
 	->restrictAccess(Auth::isEditor())
 	->setPageTitle(WT_I18N::translate('Link to an existing media object'))
-	->addExternalJavascript(WT_STATIC_URL . 'js/autocomplete.js')
-	->addInlineJavascript('autocomplete();')
 	->pageHeader();
+
+Assets::addJs(WT_STATIC_URL . 'js/autocomplete.js');
+Assets::addInlineJs('autocomplete();');
 
 //-- page parameters and checking
 $linktoid = WT_Filter::get('linktoid', WT_REGEX_XREF);
@@ -152,7 +154,7 @@ if ($linkto=='manage' && array_key_exists('GEDFact_assistant', WT_Module::getAct
 	} elseif ($action == "update" && $paramok) {
 		$record = WT_GedcomRecord::getInstance($linktoid);
 		$record->createFact('1 OBJE @' . $mediaid . '@', true);
-		$controller->addInlineJavascript('closePopupAndReloadParent();');
+		Assets::addInlineJs('closePopupAndReloadParent();');
 
 	}
 	echo '<button onclick="closePopupAndReloadParent();">', WT_I18N::translate('close'), '</button>';

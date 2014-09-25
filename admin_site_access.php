@@ -18,6 +18,7 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+use WT\Assets;
 use WT\Auth;
 
 define('WT_SCRIPT_NAME', 'admin_site_access.php');
@@ -27,9 +28,10 @@ require WT_ROOT.'includes/functions/functions_edit.php';
 $controller = new WT_Controller_Page();
 $controller
 	->restrictAccess(Auth::isAdmin())
-	->addExternalJavascript(WT_JQUERY_DATATABLES_URL)
-	->addExternalJavascript(WT_JQUERY_JEDITABLE_URL)
 	->setPageTitle(WT_I18N::translate('Site access rules'));
+
+Assets::addJs(WT_JQUERY_DATATABLES_URL);
+Assets::addJs(WT_JQUERY_JEDITABLE_URL);
 
 $action = WT_Filter::get('action');
 switch ($action) {
@@ -202,9 +204,9 @@ case 'load_unknown':
 	exit;
 }
 
-$controller
-	->pageHeader()
-	->addInlineJavascript('
+$controller->pageHeader();
+
+Assets::addInlineJs('
 		jQuery.fn.dataTableExt.oSort["unicode-asc" ]=function(a,b) {return a.replace(/<[^<]*>/, "").localeCompare(b.replace(/<[^<]*>/, ""))};
 		jQuery.fn.dataTableExt.oSort["unicode-desc"]=function(a,b) {return b.replace(/<[^<]*>/, "").localeCompare(a.replace(/<[^<]*>/, ""))};
 		jQuery("#site_access_rules").dataTable({

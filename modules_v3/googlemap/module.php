@@ -21,6 +21,7 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+use WT\Assets;
 use WT\Auth;
 use WT\Log;
 
@@ -193,7 +194,7 @@ class googlemap_WT_Module extends WT_Module implements WT_Module_Config, WT_Modu
 			echo '<img src="', $WT_IMAGES['spacer'], '" id="marker6" width="1" height="1" alt="">';
 			// end
 			echo '</td></tr></table>';
-			echo '<script>loadMap();</script>';
+			Assets::addJs('loadMap();');
 			return '<div id="'.$this->getName().'_content">'.ob_get_clean().'</div>';
 		} else {
 			$html='<table class="facts_table">';
@@ -229,8 +230,9 @@ class googlemap_WT_Module extends WT_Module implements WT_Module_Config, WT_Modu
 		$controller
 			->restrictAccess(Auth::isAdmin())
 			->setPageTitle(WT_I18N::translate('Google Maps™'))
-			->pageHeader()
-			->addInlineJavascript('jQuery("#tabs").tabs();');
+			->pageHeader();
+
+		Assets::addInlineJs('jQuery("#tabs").tabs();');
 
 		if ($action=='update') {
 			$this->setSetting('GM_MAP_TYPE',          WT_Filter::post('NEW_GM_MAP_TYPE'));
@@ -692,9 +694,10 @@ class googlemap_WT_Module extends WT_Module implements WT_Module_Config, WT_Modu
 		// End of internal configuration variables
 		$controller
 			->setPageTitle(/* I18N: %s is an individual’s name */ WT_I18N::translate('Pedigree map of %s', $controller->getPersonName()))
-			->pageHeader()
-			->addExternalJavascript(WT_STATIC_URL . 'js/autocomplete.js')
-			->addInlineJavascript('autocomplete();');
+			->pageHeader();
+
+		Assets::addJs(WT_STATIC_URL . 'js/autocomplete.js');
+		Assets::addInlineJs('autocomplete();');
 
 		echo '<link type="text/css" href="', WT_STATIC_URL, WT_MODULES_DIR, 'googlemap/css/wt_v3_googlemap.css" rel="stylesheet">';
 		echo '<div id="pedigreemap-page">
@@ -884,8 +887,8 @@ class googlemap_WT_Module extends WT_Module implements WT_Module_Config, WT_Modu
 		<!-- end of map display -->
 		<!-- Start of map scripts -->
 		<?php
-		echo '<script src="', $this->googleMapsScript(), '"></script>';
-		$controller->addInlineJavascript($this->pedigreeMapJavascript($hideflags, $hidelines));
+		Assets::addJs($this->googleMapsScript());
+		Assets::addInlineJs($this->pedigreeMapJavascript($hideflags, $hidelines));
 	}
 
 	/**
@@ -2593,7 +2596,7 @@ class googlemap_WT_Module extends WT_Module implements WT_Module_Config, WT_Modu
 		}
 		echo "\"><i class=\"icon-loading-large\"></i></div>";
 		echo '</td>';
-		echo '<script src="', $this->googleMapsScript(), '"></script>';
+		Assets::addjs($this->googleMapsScript());
 
 		$plzoom	= $latlng['pl_zoom'];		// Map zoom level
 
@@ -2630,7 +2633,7 @@ class googlemap_WT_Module extends WT_Module implements WT_Module_Config, WT_Modu
 		echo '<td style="margin-left:15px; float:right;">';
 
 		if ($STREETVIEW) {
-			$controller->addInlineJavascript('
+			Assets::addInlineJs('
 				function update_sv_params(placeid) {
 					var svlati = document.getElementById("sv_latiText").value.slice(0, -1);
 					var svlong = document.getElementById("sv_longText").value.slice(0, -1);
@@ -2900,7 +2903,7 @@ class googlemap_WT_Module extends WT_Module implements WT_Module_Config, WT_Modu
 	public function mapScripts($numfound, $level, $parent, $linklevels, $placelevels, $place_names) {
 		global $plzoom, $controller;
 
-		$controller->addInlineJavascript('
+		Assets::addInlineJs('
 			jQuery("head").append(\'<link rel="stylesheet" type="text/css" href="' . WT_STATIC_URL . WT_MODULES_DIR . 'googlemap/css/wt_v3_googlemap.css" />\');
 			var numMarkers = "' . $numfound . '";
 			var mapLevel   = "' . $level . '";
@@ -3027,10 +3030,10 @@ class googlemap_WT_Module extends WT_Module implements WT_Module_Config, WT_Modu
 		$numls = count($parent)-1;
 		$levelo = $this->checkWhereAmI($numls, $levelm);
 		if ($numfound<2 && ($level==1 || !isset($levelo[$level-1]))) {
-			$controller->addInlineJavascript('map.maxZoom=6;');
+			Assets::addInlineJs('map.maxZoom=6;');
 		} elseif ($numfound<2 && !isset($levelo[$level-2])) {
 		} elseif ($level==2) {
-			$controller->addInlineJavascript('map.maxZoom=10;');
+			Assets::addInlineJs('map.maxZoom=10;');
 		}
 		//create markers
 
@@ -3090,7 +3093,7 @@ class googlemap_WT_Module extends WT_Module implements WT_Module_Config, WT_Modu
 				$this->printGoogleMapMarkers($place, $level, $parent, $place['place_id'], $linklevels, $placelevels);
 			}
 		}
-		$controller->addInlineJavascript(ob_get_clean());
+		Assets::addInlineJs(ob_get_clean());
 	}
 
 	/**
@@ -3227,11 +3230,12 @@ class googlemap_WT_Module extends WT_Module implements WT_Module_Config, WT_Modu
 		$placeid    = WT_Filter::post('placeid',    null, WT_Filter::get('placeid'));
 		$place_name = WT_Filter::post('place_name', null, WT_Filter::get('place_name'));
 
+		Assets::addCss(WT_STATIC_URL . WT_MODULES_DIR . 'googlemap/css/wt_v3_googlemap.css');
+
 		$controller = new WT_Controller_Simple();
 		$controller
 				->restrictAccess(Auth::isAdmin())
 				->setPageTitle(WT_I18N::translate('Geographic data'))
-				->addInlineJavascript('$("<link>", {rel: "stylesheet", type: "text/css", href: "' . WT_STATIC_URL . WT_MODULES_DIR . 'googlemap/css/wt_v3_googlemap.css"}).appendTo("head");')
 				->pageHeader();
 
 		$where_am_i=$this->placeIdToHierarchy($placeid);
@@ -3249,7 +3253,7 @@ class googlemap_WT_Module extends WT_Module implements WT_Module_Config, WT_Modu
 
 			// autoclose window when update successful unless debug on
 			if (!WT_DEBUG) {
-				$controller->addInlineJavaScript('closePopupAndReloadParent();');
+				Assets::addInlineJs('closePopupAndReloadParent();');
 			}
 			echo "<div class=\"center\"><button onclick=\"closePopupAndReloadParent();return false;\">", WT_I18N::translate('close'), "</button></div>";
 			exit;
@@ -3267,7 +3271,7 @@ class googlemap_WT_Module extends WT_Module implements WT_Module_Config, WT_Modu
 
 			// autoclose window when update successful unless debug on
 			if (!WT_DEBUG) {
-				$controller->addInlineJavaScript('closePopupAndReloadParent();');
+				Assets::addInlineJs('closePopupAndReloadParent();');
 			}
 			echo "<div class=\"center\"><button onclick=\"closePopupAndReloadParent();return false;\">", WT_I18N::translate('close'), "</button></div>";
 			exit;
@@ -3286,7 +3290,7 @@ class googlemap_WT_Module extends WT_Module implements WT_Module_Config, WT_Modu
 				WT_Filter::get('svzoom'),
 				$placeid
 			));
-			$controller->addInlineJavaScript('window.close();');
+			Assets::addInlineJs('window.close();');
 			exit;
 		}
 

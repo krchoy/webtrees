@@ -132,7 +132,7 @@ class faq_WT_Module extends WT_Module implements WT_Module_Menu, WT_Module_Confi
 			}
 			$controller->pageHeader();
 			if (array_key_exists('ckeditor', WT_Module::getActiveModules())) {
-				ckeditor_WT_Module::enableEditor($controller);
+				ckeditor_WT_Module::enableEditor();
 			}
 
 			// "Help for this page" link

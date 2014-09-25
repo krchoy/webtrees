@@ -21,6 +21,8 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+use WT\Assets;
+
 class stories_WT_Module extends WT_Module implements WT_Module_Tab, WT_Module_Config, WT_Module_Menu {
 	/**
 	 * {@inheritdoc}
@@ -208,12 +210,11 @@ class stories_WT_Module extends WT_Module implements WT_Module_Tab, WT_Module_Co
 					$story_body = '';
 					$xref       = WT_Filter::get('xref', WT_REGEX_XREF);
 				}
-				$controller
-					->pageHeader()
-					->addExternalJavascript(WT_STATIC_URL . 'js/autocomplete.js')
-					->addInlineJavascript('autocomplete();');
+				$controller->pageHeader();
+				Assets::addJs(WT_STATIC_URL . 'js/autocomplete.js');
+				Assets::addInlineJs('autocomplete();');
 				if (array_key_exists('ckeditor', WT_Module::getActiveModules())) {
-					ckeditor_WT_Module::enableEditor($controller);
+					ckeditor_WT_Module::enableEditor();
 				}
 
 				echo '<form name="story" method="post" action="module.php?mod=', $this->getName(), '&amp;mod_action=admin_edit">';
@@ -292,9 +293,10 @@ class stories_WT_Module extends WT_Module implements WT_Module_Tab, WT_Module_Co
 			$controller = new WT_Controller_Page();
 			$controller
 				->setPageTitle($this->getTitle())
-				->pageHeader()
-				->addExternalJavascript(WT_JQUERY_DATATABLES_URL)
-				->addInlineJavascript('
+				->pageHeader();
+
+			Assets::addJs(WT_JQUERY_DATATABLES_URL);
+			Assets::addJs('
 					jQuery("#story_table").dataTable({
 						dom: \'<"H"pf<"dt-clear">irl>t<"F"pl>\',
 						' . WT_I18N::datatablesI18N() . ',
@@ -372,9 +374,10 @@ class stories_WT_Module extends WT_Module implements WT_Module_Tab, WT_Module_Co
 		$controller = new WT_Controller_Page();
 		$controller
 			->setPageTitle($this->getTitle())
-			->pageHeader()
-			->addExternalJavascript(WT_JQUERY_DATATABLES_URL)
-			->addInlineJavascript('
+			->pageHeader();
+
+		Assets::addJs(WT_JQUERY_DATATABLES_URL);
+		Assets::addInlineJs('
 				jQuery("#story_table").dataTable({
 					dom: \'<"H"pf<"dt-clear">irl>t<"F"pl>\',
 					' . WT_I18N::datatablesI18N() . ',

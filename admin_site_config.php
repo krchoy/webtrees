@@ -18,6 +18,7 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+use WT\Assets;
 use WT\Auth;
 
 define('WT_SCRIPT_NAME', 'admin_site_config.php');
@@ -27,10 +28,11 @@ require WT_ROOT.'includes/functions/functions_edit.php';
 $controller = new WT_Controller_Page();
 $controller
 	->restrictAccess(Auth::isAdmin())
-	->addExternalJavascript(WT_JQUERY_JEDITABLE_URL)
-	->addInlineJavascript('jQuery("#tabs").tabs();')
 	->setPageTitle(WT_I18N::translate('Site configuration'))
 	->pageHeader();
+
+Assets::addJs(WT_JQUERY_JEDITABLE_URL);
+Assets::addInlineJs('jQuery("#tabs").tabs();');
 
 // Lists of options for <select> controls.
 $SMTP_SSL_OPTIONS = array(
@@ -70,28 +72,28 @@ $WELCOME_TEXT_AUTH_MODE_OPTIONS = array(
 					<td>
 						<dl>
 							<dt><?php echo WT_I18N::translate('Data folder'), help_link('INDEX_DIRECTORY'); ?></dt>
-							<dd><?php echo edit_field_inline('site_setting-INDEX_DIRECTORY', WT_Site::getPreference('INDEX_DIRECTORY'), $controller); ?></dd>
+							<dd><?php echo edit_field_inline('site_setting-INDEX_DIRECTORY', WT_Site::getPreference('INDEX_DIRECTORY')); ?></dd>
 
 							<dt><?php echo WT_I18N::translate('Memory limit'), help_link('MEMORY_LIMIT'); ?></dt>
-							<dd><?php echo edit_field_inline('site_setting-MEMORY_LIMIT', WT_Site::getPreference('MEMORY_LIMIT'), $controller); ?></dd>
+							<dd><?php echo edit_field_inline('site_setting-MEMORY_LIMIT', WT_Site::getPreference('MEMORY_LIMIT')); ?></dd>
 
 							<dt><?php echo WT_I18N::translate('PHP time limit'), help_link('MAX_EXECUTION_TIME'); ?></dt>
-							<dd><?php echo edit_field_inline('site_setting-MAX_EXECUTION_TIME', WT_Site::getPreference('MAX_EXECUTION_TIME'), $controller); ?></dd>
+							<dd><?php echo edit_field_inline('site_setting-MAX_EXECUTION_TIME', WT_Site::getPreference('MAX_EXECUTION_TIME')); ?></dd>
 
 							<dt><?php echo WT_I18N::translate('Allow users to select their own theme'), help_link('ALLOW_USER_THEMES'); ?></dt>
-							<dd><?php echo edit_field_yes_no_inline('site_setting-ALLOW_USER_THEMES', WT_Site::getPreference('ALLOW_USER_THEMES'), $controller); ?></dd>
+							<dd><?php echo edit_field_yes_no_inline('site_setting-ALLOW_USER_THEMES', WT_Site::getPreference('ALLOW_USER_THEMES')); ?></dd>
 
 							<dt><?php echo WT_I18N::translate('Default theme'), help_link('THEME'); ?></dt>
-							<dd><?php echo select_edit_control_inline('site_setting-THEME_DIR', array_flip(get_theme_names()), null, WT_Site::getPreference('THEME_DIR'), $controller); ?></dd>
+							<dd><?php echo select_edit_control_inline('site_setting-THEME_DIR', array_flip(get_theme_names()), null, WT_Site::getPreference('THEME_DIR')); ?></dd>
 
 							<dt><?php echo WT_I18N::translate('Show list of family trees'), help_link('ALLOW_CHANGE_GEDCOM'); ?></dt>
-							<dd><?php echo edit_field_yes_no_inline('site_setting-ALLOW_CHANGE_GEDCOM', WT_Site::getPreference('ALLOW_CHANGE_GEDCOM'), $controller); ?></dd>
+							<dd><?php echo edit_field_yes_no_inline('site_setting-ALLOW_CHANGE_GEDCOM', WT_Site::getPreference('ALLOW_CHANGE_GEDCOM')); ?></dd>
 
 							<dt><?php echo WT_I18N::translate('Session timeout'), help_link('SESSION_TIME'); ?></dt>
-							<dd><?php echo edit_field_inline('site_setting-SESSION_TIME', WT_Site::getPreference('SESSION_TIME'), $controller); ?></dd>
+							<dd><?php echo edit_field_inline('site_setting-SESSION_TIME', WT_Site::getPreference('SESSION_TIME')); ?></dd>
 
 							<dt><?php echo WT_I18N::translate('Website URL'), help_link('SERVER_URL'); ?></dt>
-							<dd><?php echo select_edit_control_inline('site_setting-SERVER_URL', array(WT_SERVER_NAME.WT_SCRIPT_PATH=>WT_SERVER_NAME.WT_SCRIPT_PATH), '', WT_Site::getPreference('SERVER_URL'), $controller); ?></dd>
+							<dd><?php echo select_edit_control_inline('site_setting-SERVER_URL', array(WT_SERVER_NAME.WT_SCRIPT_PATH=>WT_SERVER_NAME.WT_SCRIPT_PATH), '', WT_Site::getPreference('SERVER_URL')); ?></dd>
 						</dl>
 					</td>
 				</tr>
@@ -103,9 +105,9 @@ $WELCOME_TEXT_AUTH_MODE_OPTIONS = array(
 					<td>
 						<dl>
 							<dt><?php echo WT_I18N::translate('Messages'), help_link('SMTP_ACTIVE'); ?></dt>
-							<dd><?php echo select_edit_control_inline('site_setting-SMTP_ACTIVE', $SMTP_ACTIVE_OPTIONS, null, WT_Site::getPreference('SMTP_ACTIVE'), $controller); ?></dd>
+							<dd><?php echo select_edit_control_inline('site_setting-SMTP_ACTIVE', $SMTP_ACTIVE_OPTIONS, null, WT_Site::getPreference('SMTP_ACTIVE')); ?></dd>
 							<dt><?php echo WT_I18N::translate('Sender name'), help_link('SMTP_FROM_NAME'); ?></dt>
-							<dd><?php echo edit_field_inline('site_setting-SMTP_FROM_NAME', WT_Site::getPreference('SMTP_FROM_NAME'), $controller); ?></dd>
+							<dd><?php echo edit_field_inline('site_setting-SMTP_FROM_NAME', WT_Site::getPreference('SMTP_FROM_NAME')); ?></dd>
 						</dl>
 					</td>
 				</tr>
@@ -118,25 +120,25 @@ $WELCOME_TEXT_AUTH_MODE_OPTIONS = array(
 					<td>
 						<dl>
 							<dt><?php echo WT_I18N::translate('Server name'), help_link('SMTP_HOST'); ?></dt>
-							<dd><?php echo edit_field_inline('site_setting-SMTP_HOST', WT_Site::getPreference('SMTP_HOST'), $controller); ?></dd>
+							<dd><?php echo edit_field_inline('site_setting-SMTP_HOST', WT_Site::getPreference('SMTP_HOST')); ?></dd>
 
 							<dt><?php echo WT_I18N::translate('Port number'), help_link('SMTP_PORT'); ?></dt>
-							<dd><?php echo edit_field_inline('site_setting-SMTP_PORT', WT_Site::getPreference('SMTP_PORT'), $controller); ?></dd>
+							<dd><?php echo edit_field_inline('site_setting-SMTP_PORT', WT_Site::getPreference('SMTP_PORT')); ?></dd>
 
 							<dt><?php echo WT_I18N::translate('Use password'), help_link('SMTP_AUTH'); ?></dt>
-							<dd><?php echo edit_field_yes_no_inline('site_setting-SMTP_AUTH', WT_Site::getPreference('SMTP_AUTH'), $controller); ?></dd>
+							<dd><?php echo edit_field_yes_no_inline('site_setting-SMTP_AUTH', WT_Site::getPreference('SMTP_AUTH')); ?></dd>
 
 							<dt><?php echo WT_I18N::translate('Username'), help_link('SMTP_AUTH_USER'); ?></dt>
-							<dd><?php echo edit_field_inline('site_setting-SMTP_AUTH_USER', WT_Site::getPreference('SMTP_AUTH_USER'), $controller); ?></dd>
+							<dd><?php echo edit_field_inline('site_setting-SMTP_AUTH_USER', WT_Site::getPreference('SMTP_AUTH_USER')); ?></dd>
 
 							<dt><?php echo WT_I18N::translate('Password'), help_link('SMTP_AUTH_PASS'); ?></dt>
-							<dd><?php echo edit_field_inline('site_setting-SMTP_AUTH_PASS', '' /* Don't show password.  save.php has special code for this. */, $controller); ?></dd>
+							<dd><?php echo edit_field_inline('site_setting-SMTP_AUTH_PASS', '' /* Don't show password.  save.php has special code for this. */); ?></dd>
 
 							<dt><?php echo WT_I18N::translate('Secure connection'), help_link('SMTP_SSL'); ?></dt>
-							<dd><?php echo select_edit_control_inline('site_setting-SMTP_SSL', $SMTP_SSL_OPTIONS, null, WT_Site::getPreference('SMTP_SSL'), $controller); ?></dd>
+							<dd><?php echo select_edit_control_inline('site_setting-SMTP_SSL', $SMTP_SSL_OPTIONS, null, WT_Site::getPreference('SMTP_SSL')); ?></dd>
 
 							<dt><?php echo WT_I18N::translate('Sending server name'), help_link('SMTP_HELO'); ?></dt>
-							<dd><?php echo edit_field_inline('site_setting-SMTP_HELO', WT_Site::getPreference('SMTP_HELO'), $controller); ?></dd>
+							<dd><?php echo edit_field_inline('site_setting-SMTP_HELO', WT_Site::getPreference('SMTP_HELO')); ?></dd>
 						</dl>
 					</td>
 				</tr>
@@ -151,13 +153,13 @@ $WELCOME_TEXT_AUTH_MODE_OPTIONS = array(
 					<td>
 						<dl>
 							<dt><?php echo WT_I18N::translate('Login URL'), help_link('LOGIN_URL'); ?></dt>
-							<dd><?php echo edit_field_inline('site_setting-LOGIN_URL', WT_Site::getPreference('LOGIN_URL'), $controller); ?></dd>
+							<dd><?php echo edit_field_inline('site_setting-LOGIN_URL', WT_Site::getPreference('LOGIN_URL')); ?></dd>
 
 							<dt><?php echo WT_I18N::translate('Welcome text on login page'), help_link('WELCOME_TEXT_AUTH_MODE'); ?></dt>
 							<dd><?php echo select_edit_control_inline('site_setting-WELCOME_TEXT_AUTH_MODE', $WELCOME_TEXT_AUTH_MODE_OPTIONS, null, WT_Site::getPreference('WELCOME_TEXT_AUTH_MODE'), $controller); ?></dd>
 
 							<dt><?php echo WT_I18N::translate('Custom welcome text'), ' — ', WT_LOCALE, help_link('WELCOME_TEXT_AUTH_MODE_CUST'); ?></dt>
-							<dd><?php echo edit_text_inline('site_setting-WELCOME_TEXT_AUTH_MODE_4', WT_Site::getPreference('WELCOME_TEXT_AUTH_MODE_'.WT_LOCALE), $controller); ?></dd>
+							<dd><?php echo edit_text_inline('site_setting-WELCOME_TEXT_AUTH_MODE_4', WT_Site::getPreference('WELCOME_TEXT_AUTH_MODE_'.WT_LOCALE)); ?></dd>
 
 							<dt><?php echo WT_I18N::translate('Allow visitors to request account registration'), help_link('USE_REGISTRATION_MODULE'); ?></dt>
 							<dd><?php echo edit_field_yes_no_inline('site_setting-USE_REGISTRATION_MODULE', WT_Site::getPreference('USE_REGISTRATION_MODULE'), $controller); ?></dd>

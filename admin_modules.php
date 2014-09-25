@@ -18,6 +18,7 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+use WT\Assets;
 use WT\Auth;
 
 define('WT_SCRIPT_NAME', 'admin_modules.php');
@@ -79,9 +80,10 @@ case 'delete_module':
 }
 
 $controller
-	->pageHeader()
-	->addExternalJavascript(WT_JQUERY_DATATABLES_URL)
-	->addInlineJavascript('
+	->pageHeader();
+
+Assets::addJs(WT_JQUERY_DATATABLES_URL);
+Assets::addInlineJs('
 	  function reindexMods(id) {
 			jQuery("#"+id+" input").each(
 				function (index, value) {

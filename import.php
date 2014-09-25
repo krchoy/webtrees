@@ -26,6 +26,8 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+use WT\Assets;
+
 define('WT_SCRIPT_NAME', 'import.php');
 require './includes/session.php';
 
@@ -64,7 +66,7 @@ if ($row->import_offset==$row->import_total) {
 	WT_Tree::get($gedcom_id)->setPreference('imported', '1');
 	// Finished?  Show the maintenance links, similar to admin_trees_manage.php
 	WT_DB::exec("COMMIT");
-	$controller->addInlineJavascript(
+	Assets::addInlineJs(
 		'jQuery("#import'. $gedcom_id.'").toggle();'.
 		'jQuery("#actions'.$gedcom_id.'").toggle();'
 	);
@@ -76,7 +78,7 @@ $percent=100*(($row->import_offset) / $row->import_total);
 $status=WT_I18N::translate('Loading data from GEDCOM file: %.1f%%', $percent);
 
 echo '<div id="progressbar', $gedcom_id, '"><div style="position:absolute;">', $status, '</div></div>';
-$controller->addInlineJavascript(
+Assets::addInlineJs(
 	'jQuery("#progressbar' . $gedcom_id . '").progressbar({value: ' . round($percent, 1) . '});'
 );
 
@@ -110,7 +112,7 @@ for ($end_time = microtime(true) + 1.0; microtime(true) < $end_time;) {
 		if (substr($data->chunk_data, 0, 6)!='0 HEAD') {
 			WT_DB::exec("ROLLBACK");
 			echo WT_I18N::translate('Invalid GEDCOM file - no header record found.');
-			$controller->addInlineJavascript('jQuery("#actions'.$gedcom_id.'").toggle();');
+			Assets::addInlineJs('jQuery("#actions'.$gedcom_id.'").toggle();');
 			exit;
 		}
 		// What character set is this?  Need to convert it to UTF8
@@ -142,7 +144,7 @@ for ($end_time = microtime(true) + 1.0; microtime(true) < $end_time;) {
 			)->execute(array($gedcom_id));
 			break;
 		case 'ANSI': // ANSI could be anything.  Most applications seem to treat it as latin1.
-			$controller->addInlineJavascript(
+			Assets::addInlineJs(
 				'alert("'. /* I18N: %1$s and %2$s are the names of character encodings, such as ISO-8859-1 or ASCII */ WT_I18N::translate('This GEDCOM file is encoded using %1$s.  Assume this to mean %2$s.', $charset, 'ISO-8859-1'). '");'
 			);
 		case 'WINDOWS':
@@ -187,7 +189,7 @@ for ($end_time = microtime(true) + 1.0; microtime(true) < $end_time;) {
 		default:
 			WT_DB::exec("ROLLBACK");
 			echo '<span class="error">',  WT_I18N::translate('Error: converting GEDCOM files from %s encoding to UTF-8 encoding not currently supported.', $charset), '</span>';
-			$controller->addInlineJavascript('jQuery("#actions'.$gedcom_id.'").toggle();');
+			Assets::addInlineJs('jQuery("#actions'.$gedcom_id.'").toggle();');
 			exit;
 		}
 		$first_time=false;
@@ -217,11 +219,11 @@ for ($end_time = microtime(true) + 1.0; microtime(true) < $end_time;) {
 		if ($ex->getCode() === '40001') {
 			// "SQLSTATE[40001]: Serialization failure: 1213 Deadlock found when trying to get lock; try restarting transaction"
 			// The documentation says that if you get this error, wait and try again.....
-			$controller->addInlineJavascript('jQuery("#import' . $gedcom_id . '").load("import.php?gedcom_id=' . $gedcom_id . '&u=' . uniqid() . '");');
+			Assets::addInlineJs('jQuery("#import' . $gedcom_id . '").load("import.php?gedcom_id=' . $gedcom_id . '&u=' . uniqid() . '");');
 		} else {
 			// A fatal error.  Nothing we can do?
 			echo '<span class="error">', $ex->getMessage(), '</span>';
-			$controller->addInlineJavascript('jQuery("#actions' . $gedcom_id . '").toggle();');
+			Assets::addInlineJs('jQuery("#actions' . $gedcom_id . '").toggle();');
 		}
 		exit;
 	}
@@ -231,4 +233,4 @@ WT_DB::exec("COMMIT");
 
 // Reload.....
 // Use uniqid() to prevent jQuery caching the previous response.
-$controller->addInlineJavascript('jQuery("#import' . $gedcom_id . '").load("import.php?gedcom_id=' . $gedcom_id . '&u=' . uniqid() . '");');
+Assets::addInlineJs('jQuery("#import' . $gedcom_id . '").load("import.php?gedcom_id=' . $gedcom_id . '&u=' . uniqid() . '");');

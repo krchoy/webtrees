@@ -21,6 +21,8 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+use WT\Assets;
+
 class sources_tab_WT_Module extends WT_Module implements WT_Module_Tab {
 	private $facts;
 
@@ -94,7 +96,7 @@ class sources_tab_WT_Module extends WT_Module implements WT_Module_Tab {
 		</table>
 		<?php
 		if (!$SHOW_LEVEL2_NOTES) {
-			echo '<script>jQuery("tr.row_sour2").toggle();</script>';
+			Assets::addInlineJs('jQuery("tr.row_sour2").toggle();');
 		}
 
 		return '<div id="' . $this->getName() . '_content">' . ob_get_clean() . '</div>';

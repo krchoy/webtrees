@@ -25,6 +25,8 @@
 
 //-- create a shared note record from the incoming variables
 
+use WT\Assets;
+
 $newgedrec  = "0 @XREF@ NOTE\n";
 
 if (isset($_REQUEST['EVEN'])) $EVEN = $_REQUEST['EVEN'];
@@ -92,7 +94,7 @@ if ($pid_array != '') {
 }
 
 if ($record) {
-	$controller->addInlineJavascript('
+	Assets::addInlineJs('
 	window.opener.set_pid_array("' . $pid_array . '");
 	openerpasteid("' . $record->getXref() . '");
 	');

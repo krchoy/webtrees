@@ -21,24 +21,25 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+use WT\Assets;
+
 define('WT_SCRIPT_NAME', 'search.php');
 require './includes/session.php';
 require_once WT_ROOT.'includes/functions/functions_print_lists.php';
 
 $controller = new WT_Controller_Search();
-$controller
-	->pageHeader()
-	->addExternalJavascript(WT_STATIC_URL . 'js/autocomplete.js')
-	->addInlineJavascript('autocomplete();');
+$controller->pageHeader();
 
-?>
-<script>
+Assets::addJs(WT_STATIC_URL . 'js/autocomplete.js');
+Assets::addInlineJs('autocomplete();');
+
+Assets::addInlineJs('
 	function checknames(frm) {
-		action = "<?php echo $controller->action; ?>";
+		action = "' . $controller->action . '";
 		if (action == "general")
 		{
 			if (frm.query.value.length<2) {
-				alert("<?php echo WT_I18N::translate('Please enter more than one character'); ?>");
+				alert("' . WT_I18N::translate('Please enter more than one character') . '");
 				frm.query.focus();
 				return false;
 			}
@@ -52,14 +53,14 @@ $controller
 
 			if (year == "") {
 				if (fname.length < 2 && lname.length < 2 && place.length < 2) {
-					alert("<?php echo WT_I18N::translate('Please enter more than one character'); ?>");
+					alert("' . WT_I18N::translate('Please enter more than one character') / '");
 					return false;
 				}
 			}
 
 			if (year != "") {
 				if (fname === "" && lname === "" && place === "") {
-					alert("<?php echo WT_I18N::translate('Please enter a given name, surname, or place in addition to the year'); ?>");
+					alert("' . WT_I18N::translate('Please enter a given name, surname, or place in addition to the year') . '");
 					frm.firstname.focus();
 					return false;
 				}
@@ -68,9 +69,8 @@ $controller
 		}
 		return true;
 	}
+');
 
-</script>
-<?php
 echo '<div id="search-page">
 	<h2>' , $controller->getPageTitle(), '</h2>';
 	//========== Search Form Outer Table //==========
@@ -118,8 +118,8 @@ echo '<div id="search-page">
 					<div class="value"><input tabindex="1" name="query" value="" type="text" autofocus></div>
 					<div class="label">',  WT_I18N::translate('Replace with'), '</div>
 					<div class="value"><input tabindex="2" name="replace" value="" type="text"></div>';
-				?>
-				<script>
+
+				Assets::inlineJs('
 					function checkAll(box) {
 						if (!box.checked) {
 							box.form.replaceNames.disabled = false;
@@ -131,8 +131,8 @@ echo '<div id="search-page">
 							box.form.replacePlacesWord.disabled = true;
 						}
 					}
-				</script>
-				<?php
+				');
+
 				echo '<div class="label">', WT_I18N::translate('Search'), '</div>
 					<div class="value"><p>
 						<input id="replaceAll" checked="checked" onclick="checkAll(this);" value="yes" name="replaceAll" type="checkbox">

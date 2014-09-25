@@ -22,6 +22,9 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+// webtrees requires a modern version of PHP
+// Note - maintaining this check requires that this file can be parsed by PHP5.2
+use WT\Assets;
 use WT\Auth;
 
 define('WT_SCRIPT_NAME', 'index.php');
@@ -85,9 +88,10 @@ $controller
 	->setPageTitle($ctype === 'user' ? WT_I18N::translate('My page') : WT_TREE_TITLE)
 	->setMetaRobots('index,follow')
 	->setCanonicalUrl(WT_SCRIPT_NAME . '?ctype=' . $ctype . '&amp;ged=' . WT_GEDCOM)
-	->pageHeader()
-	// By default jQuery modifies AJAX URLs to disable caching, causing JS libraries to be loaded many times.
-	->addInlineJavascript('jQuery.ajaxSetup({cache:true});');
+	->pageHeader();
+
+// By default jQuery modifies AJAX URLs to disable caching, causing JS libraries to be loaded many times.
+Assets::addInlineJs('jQuery.ajaxSetup({cache:true});');
 
 if ($ctype === 'user') {
 	echo '<div id="my-page">';
@@ -110,7 +114,7 @@ if ($blocks['main']) {
 		} else {
 			// Load the block asynchronously
 			echo '<div id="block_', $block_id, '"><div class="loading-image">&nbsp;</div></div>';
-			$controller->addInlineJavascript(
+			Assets::addInlineJs(
 				'jQuery("#block_' . $block_id . '").load("index.php?ctype=' . $ctype . '&action=ajax&block_id=' . $block_id . '");'
 			);
 		}
@@ -132,7 +136,7 @@ if ($blocks['side']) {
 		} else {
 			// Load the block asynchronously
 			echo '<div id="block_', $block_id, '"><div class="loading-image">&nbsp;</div></div>';
-			$controller->addInlineJavascript(
+			Assets::addInlineJs(
 				'jQuery("#block_' . $block_id . '").load("index.php?ctype=' . $ctype . '&action=ajax&block_id=' . $block_id . '");'
 			);
 		}

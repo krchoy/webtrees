@@ -21,6 +21,7 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+use WT\Assets;
 use WT\Auth;
 
 define('WT_SCRIPT_NAME', 'find.php');
@@ -103,9 +104,8 @@ case "specialchar":
 	$action="filter";
 	break;
 case "facts":
-	$controller
-		->setPageTitle(WT_I18N::translate('Find a fact or event'))
-		->addInlineJavascript('initPickFact();');
+	$controller->setPageTitle(WT_I18N::translate('Find a fact or event'));
+	Assets::addInlineJs('initPickFact();');
 	break;
 }
 $controller->pageHeader();

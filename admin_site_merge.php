@@ -23,6 +23,7 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+use WT\Assets;
 use WT\Auth;
 
 define('WT_SCRIPT_NAME', 'admin_site_merge.php');
@@ -33,9 +34,10 @@ $controller = new WT_Controller_Page;
 $controller
 	->restrictAccess(Auth::isManager())
 	->setPageTitle(WT_I18N::translate('Merge records'))
-	->addExternalJavascript(WT_STATIC_URL . 'js/autocomplete.js')
-	->addInlineJavascript('autocomplete();')
 	->pageHeader();
+
+Assets::addJs(WT_STATIC_URL . 'js/autocomplete.js');
+Assets::addInlineJs('autocomplete();');
 
 $ged    = $GEDCOM;
 $gid1   = WT_Filter::post('gid1', WT_REGEX_XREF);
@@ -220,7 +222,7 @@ if ($action!='choose') {
 	}
 }
 if ($action=='choose') {
-	$controller->addInlineJavascript('
+	Assets::addInlineJs('
 	function iopen_find(textbox, gedselect) {
 		ged = gedselect.options[gedselect.selectedIndex].value;
 		findIndi(textbox, null, ged);

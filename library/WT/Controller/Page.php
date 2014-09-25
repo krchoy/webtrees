@@ -16,6 +16,8 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+use WT\Assets;
+
 /**
  * Class WT_Controller_Page Controller for full-page, themed HTML responses
  */
@@ -32,10 +34,9 @@ class WT_Controller_Page extends WT_Controller_Base {
 	public function __construct() {
 		parent::__construct();
 		// Every page uses these scripts
-		$this
-			->addExternalJavascript(WT_JQUERY_URL)
-			->addExternalJavascript(WT_JQUERYUI_URL)
-			->addExternalJavascript(WT_WEBTREES_JS_URL);
+		Assets::addJs(WT_JQUERY_URL);
+		Assets::addJs(WT_JQUERYUI_URL);
+		Assets::addJs(WT_WEBTREES_JS_URL);
 	}
 
 	/**
@@ -138,12 +139,8 @@ class WT_Controller_Page extends WT_Controller_Base {
 			$title .= ' - ' . $META_TITLE;
 		}
 
-		// This javascript needs to be loaded in the header, *before* the CSS.
-		// All other javascript should be defered until the end of the page
-		$javascript = '<script src="' . WT_MODERNIZR_URL . '"></script>';
-
 		// Give Javascript access to some PHP constants
-		$this->addInlineJavascript('
+		Assets::addInlineJs('
 			var WT_STATIC_URL  = "' . WT_Filter::escapeJs(WT_STATIC_URL) . '";
 			var WT_THEME_DIR   = "' . WT_Filter::escapeJs(WT_THEME_DIR) . '";
 			var WT_MODULES_DIR = "' . WT_Filter::escapeJs(WT_MODULES_DIR) . '";
@@ -153,10 +150,10 @@ class WT_Controller_Page extends WT_Controller_Base {
 			var WT_SCRIPT_NAME = "' . WT_Filter::escapeJs(WT_SCRIPT_NAME) . '";
 			var WT_LOCALE      = "' . WT_Filter::escapeJs(WT_LOCALE) . '";
 			var WT_CSRF_TOKEN  = "' . WT_Filter::escapeJs(WT_Filter::getCsrfToken()) . '";
-		', self::JS_PRIORITY_HIGH);
+		');
 
 		// Temporary fix for access to main menu hover elements on android/blackberry touch devices
-		$this->addInlineJavascript('
+		Assets::addInlineJs('
 			if(navigator.userAgent.match(/Android|PlayBook/i)) {
 				jQuery("#main-menu > li > a").attr("href", "#");
 				jQuery("a.icon_arrow").attr("href", "#");
@@ -197,7 +194,7 @@ class WT_Controller_Page extends WT_Controller_Base {
 		if (WT_DEBUG_SQL) {
 			echo WT_DB::getQueryLog();
 		}
-		echo $this->getJavascript();
+		parent::pageFooter();
 		echo '</body></html>';
 
 		return $this;

@@ -46,7 +46,7 @@ $controller = new WT_Controller_Ajax();
 $controller->pageHeader();
 
 if (array_key_exists('ckeditor', WT_Module::getActiveModules())) {
-	ckeditor_WT_Module::enableEditor($controller);
+	ckeditor_WT_Module::enableEditor();
 }
 
 ?>

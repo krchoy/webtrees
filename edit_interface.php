@@ -21,6 +21,7 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+use WT\Assets;
 use WT\Auth;
 
 define('WT_SCRIPT_NAME', 'edit_interface.php');
@@ -31,10 +32,10 @@ $action = WT_Filter::post('action', null, WT_Filter::get('action'));
 
 $controller = new WT_Controller_Simple();
 $controller
-	->restrictAccess(Auth::isEditor())
-	->addExternalJavascript(WT_STATIC_URL . 'js/autocomplete.js')
-	->addInlineJavascript('autocomplete();')
-	->addInlineJavascript('
+	->restrictAccess(Auth::isEditor());
+Assets::addJs(WT_STATIC_URL . 'js/autocomplete.js');
+Assets::addInlineJs('autocomplete();');
+Assets::addInlineJs('
 	var locale_date_format="' . preg_replace('/[^DMY]/', '', str_replace(array('J', 'F'), array('D', 'M'), strtoupper($DATE_FORMAT))). '";
 ');
 
@@ -48,8 +49,8 @@ case 'editraw':
 
 	$controller
 		->setPageTitle($record->getFullName() . ' - ' . WT_I18N::translate('Edit raw GEDCOM'))
-		->pageHeader()
-		->addInlineJavascript('jQuery("#raw-gedcom-list").sortable({opacity: 0.7, cursor: "move", axis: "y"});');
+		->pageHeader();
+	Assets::addInlineJs('jQuery("#raw-gedcom-list").sortable({opacity: 0.7, cursor: "move", axis: "y"});');
 
 	?>
 	<div id="edit_interface-page">
@@ -130,7 +131,7 @@ case 'updateraw':
 
 	$record->updateRecord($gedcom, false);
 
-	$controller->addInlineJavascript('closePopupAndReloadParent();');
+	Assets::addInlineJs('closePopupAndReloadParent();');
 	break;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -151,8 +152,8 @@ case 'editrawfact':
 	}
 	if (!$edit_fact) {
 		$controller
-			->pageHeader()
-			->addInlineJavascript('closePopupAndReloadParent();');
+			->pageHeader();
+		Assets::addInlineJs('closePopupAndReloadParent();');
 		exit;
 	}
 
@@ -212,8 +213,8 @@ case 'updaterawfact':
 	}
 	if (!$edit_fact) {
 		$controller
-			->pageHeader()
-			->addInlineJavascript('closePopupAndReloadParent();');
+			->pageHeader();
+		Assets::addInlineJs('closePopupAndReloadParent();');
 		exit;
 	}
 
@@ -227,7 +228,7 @@ case 'updaterawfact':
 
 	$record->updateFact($fact_id, $gedcom, !$keep_chan);
 
-	$controller->addInlineJavascript('closePopupAndReloadParent();');
+	Assets::addInlineJs('closePopupAndReloadParent();');
 	break;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -248,8 +249,8 @@ case 'edit':
 	}
 	if (!$edit_fact) {
 		$controller
-			->pageHeader()
-			->addInlineJavascript('closePopupAndReloadParent();');
+			->pageHeader();
+		Assets::addInlineJs('closePopupAndReloadParent();');
 		exit;
 	}
 
@@ -470,7 +471,7 @@ case 'update':
 		}
 	}
 
-	$controller->addInlineJavascript('closePopupAndReloadParent();');
+	Assets::addInlineJs('closePopupAndReloadParent();');
 	break;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -547,9 +548,9 @@ case 'add_child_to_family_action':
 	}
 
 	if (WT_Filter::post('goto')=='new') {
-		$controller->addInlineJavascript('closePopupAndReloadParent("' . $new_child->getRawUrl() . '");');
+		Assets::addInlineJs('closePopupAndReloadParent("' . $new_child->getRawUrl() . '");');
 	} else {
-		$controller->addInlineJavascript('closePopupAndReloadParent();');
+		Assets::addInlineJs('closePopupAndReloadParent();');
 	}
 	break;
 
@@ -623,9 +624,9 @@ case 'add_child_to_individual_action':
 	$family->createFact('1 CHIL @' . $child->getXref() . '@', true);
 
 	if (WT_Filter::post('goto')=='new') {
-		$controller->addInlineJavascript('closePopupAndReloadParent("' . $child->getRawUrl() . '");');
+		Assets::addInlineJs('closePopupAndReloadParent("' . $child->getRawUrl() . '");');
 	} else {
-		$controller->addInlineJavascript('closePopupAndReloadParent();');
+		Assets::addInlineJs('closePopupAndReloadParent();');
 	}
 	break;
 
@@ -706,9 +707,9 @@ case 'add_parent_to_individual_action':
 	}
 
 	if (WT_Filter::post('goto')=='new') {
-		$controller->addInlineJavascript('closePopupAndReloadParent("' . $parent->getRawUrl() . '");');
+		Assets::addInlineJs('closePopupAndReloadParent("' . $parent->getRawUrl() . '");');
 	} else {
-		$controller->addInlineJavascript('closePopupAndReloadParent();');
+		Assets::addInlineJs('closePopupAndReloadParent();');
 	}
 	break;
 
@@ -758,9 +759,9 @@ case 'add_unlinked_indi_action':
 	$new_indi = WT_GedcomRecord::createRecord($gedrec, WT_GED_ID);
 
 	if (WT_Filter::post('goto')=='new') {
-		$controller->addInlineJavascript('closePopupAndReloadParent("' . $new_indi->getRawUrl() . '");');
+		Assets::addInlineJs('closePopupAndReloadParent("' . $new_indi->getRawUrl() . '");');
 	} else {
-		$controller->addInlineJavascript('closePopupAndReloadParent();');
+		Assets::addInlineJs('closePopupAndReloadParent();');
 	}
 	break;
 
@@ -848,9 +849,9 @@ case 'add_spouse_to_individual_action':
 	$person->createFact('1 FAMS @' . $family->getXref() . '@', true);
 
 	if (WT_Filter::post('goto')=='new') {
-		$controller->addInlineJavascript('closePopupAndReloadParent("' . $spouse->getRawUrl() . '");');
+		Assets::addInlineJs('closePopupAndReloadParent("' . $spouse->getRawUrl() . '");');
 	} else {
-		$controller->addInlineJavascript('closePopupAndReloadParent();');
+		Assets::addInlineJs('closePopupAndReloadParent();');
 	}
 	break;
 
@@ -935,9 +936,9 @@ case 'add_spouse_to_family_action':
 	$family->createFact(trim($famrec), true); // trim leading \n
 
 	if (WT_Filter::post('goto')=='new') {
-		$controller->addInlineJavascript('closePopupAndReloadParent("' . $spouse->getRawUrl() . '");');
+		Assets::addInlineJs('closePopupAndReloadParent("' . $spouse->getRawUrl() . '");');
 	} else {
-		$controller->addInlineJavascript('closePopupAndReloadParent();');
+		Assets::addInlineJs('closePopupAndReloadParent();');
 	}
 	break;
 
@@ -1036,7 +1037,7 @@ case 'linkfamaction':
 		$family->createFact('1 CHIL @' . $person->getXref() . '@', true);
 	}
 
-	$controller->addInlineJavascript('closePopupAndReloadParent();');
+	Assets::addInlineJs('closePopupAndReloadParent();');
 	break;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1154,7 +1155,7 @@ case 'linkspouseaction':
 	$person->createFact('1 FAMS @' . $family->getXref() .'@', true);
 	$spouse->createFact('1 FAMS @' . $family->getXref() .'@', true);
 
-	$controller->addInlineJavascript('closePopupAndReloadParent();');
+	Assets::addInlineJs('closePopupAndReloadParent();');
 	break;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1165,17 +1166,17 @@ case 'addnewsource':
 		->setPageTitle(WT_I18N::translate('Create a new source'))
 		->pageHeader();
 
-	?>
-	<script>
+	Assets::addInlineJs('
 		function check_form(frm) {
 			if (frm.TITL.value=="") {
-				alert('<?php echo WT_I18N::translate('You must provide a source title'); ?>');
+				alert("' . WT_I18N::translate('You must provide a source title') . '");
 				frm.TITL.focus();
 				return false;
 			}
 			return true;
 		}
-	</script>
+	');
+	?>
 	<div id="edit_interface-page">
 		<h4><?php echo $controller->getPageTitle(); ?></h4>
 		<form method="post" action="edit_interface.php" onsubmit="return check_form(this);">
@@ -1308,7 +1309,7 @@ case 'addsourceaction':
 	}
 
 	$record = WT_GedcomRecord::createRecord($newgedrec, WT_GED_ID);
-	$controller->addInlineJavascript('openerpasteid("' . $record->getXref() . '");');
+	Assets::addInlineJs('openerpasteid("' . $record->getXref() . '");');
 	break;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1364,7 +1365,7 @@ case 'addnoteaction':
 	$gedrec  = '0 @XREF@ NOTE ' . preg_replace("/\r?\n/", "\n1 CONT ", WT_Filter::post('NOTE'));
 
 	$record = WT_GedcomRecord::createRecord($gedrec, WT_GED_ID);
-	$controller->addInlineJavascript('openerpasteid("' . $record->getXref() . '");');
+	Assets::addInlineJs('openerpasteid("' . $record->getXref() . '");');
 	break;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1487,7 +1488,7 @@ case 'editnoteaction':
 
 	$record->updateRecord($gedrec, !$keep_chan);
 
-	$controller->addInlineJavascript('closePopupAndReloadParent();');
+	Assets::addInlineJs('closePopupAndReloadParent();');
 	break;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1598,7 +1599,7 @@ case 'addrepoaction':
 	}
 
 	$record = WT_GedcomRecord::createRecord($gedrec, WT_GED_ID);
-	$controller->addInlineJavascript('openerpasteid("' . $record->getXref() . '");');
+	Assets::addInlineJs('openerpasteid("' . $record->getXref() . '");');
 	break;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1618,8 +1619,8 @@ case 'editname':
 	}
 	if (!$name_fact) {
 		$controller
-			->pageHeader()
-			->addInlineJavascript('closePopupAndReloadParent();');
+			->pageHeader();
+		Assets::addInlineJs('closePopupAndReloadParent();');
 		exit;
 	}
 
@@ -1656,9 +1657,16 @@ case 'reorder_media':
 
 	$controller
 		->setPageTitle(WT_I18N::translate('Re-order media'))
-		->pageHeader()
-		->addInlineJavascript('
-			jQuery("#reorder_media_list").sortable({forceHelperSize: true, forcePlaceholderSize: true, opacity: 0.7, cursor: "move", axis: "y"});
+		->pageHeader();
+
+	Assets::addInlineJs('
+		jQuery("#reorder_media_list").sortable({
+			forceHelperSize: true,
+			forcePlaceholderSize: true,
+			opacity: 0.7,
+			cursor: "move",
+			axis: "y"
+		});
 
 			//-- update the order numbers after drag-n-drop sorting is complete
 			jQuery("#reorder_media_list").bind("sortupdate", function(event, ui) {
@@ -1771,7 +1779,7 @@ case 'reorder_media_update':
 
 	$person->updateRecord(implode("\n", $facts), !$keep_chan);
 
-	$controller->addInlineJavascript('closePopupAndReloadParent();');
+	Assets::addInlineJs('closePopupAndReloadParent();');
 	break;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1785,10 +1793,21 @@ case 'reorder_children':
 	check_record_access($family);
 
 	$controller
-		->addInlineJavascript('jQuery("#reorder_list").sortable({forceHelperSize: true, forcePlaceholderSize: true, opacity: 0.7, cursor: "move", axis: "y"});')
-		->addInlineJavascript('jQuery("#reorder_list").bind("sortupdate", function(event, ui) { jQuery("#"+jQuery(this).attr("id")+" input").each( function (index, value) { value.value = index+1; }); });')
 		->setPageTitle(WT_I18N::translate('Re-order children'))
 		->pageHeader();
+
+	Assets::addInlineJs('
+		jQuery("#reorder_list").sortable({
+			forceHelperSize: true,
+			forcePlaceholderSize: true,
+			opacity: 0.7,
+			cursor: "move",
+			axis: "y"
+		});
+		jQuery("#reorder_list").bind("sortupdate", function(event, ui) {
+			jQuery("#"+jQuery(this).attr("id")+" input").each( function (index, value) { value.value = index+1; });
+		});
+	');
 
 	?>
 	<div id="edit_interface-page">
@@ -1884,7 +1903,7 @@ case 'reorder_update':
 		$family->updateRecord(implode("\n", $gedcom), !$keep_chan);
 	}
 
-	$controller->addInlineJavascript('closePopupAndReloadParent();');
+	Assets::addInlineJs('closePopupAndReloadParent();');
 	break;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -2154,7 +2173,7 @@ case 'changefamily_update':
 		}
 	}
 
-	$controller->addInlineJavascript('closePopupAndReloadParent();');
+	Assets::addInlineJs('closePopupAndReloadParent();');
 	break;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -2168,11 +2187,12 @@ case 'reorder_fams':
 	check_record_access($person);
 
 	$controller
-		->addInlineJavascript('jQuery("#reorder_list").sortable({forceHelperSize: true, forcePlaceholderSize: true, opacity: 0.7, cursor: "move", axis: "y"});')
-		//-- update the order numbers after drag-n-drop sorting is complete
-		->addInlineJavascript('jQuery("#reorder_list").bind("sortupdate", function(event, ui) { jQuery("#"+jQuery(this).attr("id")+" input").each( function (index, value) { value.value = index+1; }); });')
 		->setPageTitle(WT_I18N::translate('Re-order families'))
 		->pageHeader();
+
+	Assets::addInlineJs('jQuery("#reorder_list").sortable({forceHelperSize: true, forcePlaceholderSize: true, opacity: 0.7, cursor: "move", axis: "y"});');
+	//-- update the order numbers after drag-n-drop sorting is complete
+	Assets::addInlineJs('jQuery("#reorder_list").bind("sortupdate", function(event, ui) { jQuery("#"+jQuery(this).attr("id")+" input").each( function (index, value) { value.value = index+1; }); });');
 
 	$fams = $person->getSpouseFamilies();
 	if ($option=='bymarriage') {
@@ -2246,7 +2266,7 @@ case 'reorder_fams_update':
 		$person->updateRecord(implode("\n", $gedcom), !$keep_chan);
 	}
 
-	$controller->addInlineJavascript('closePopupAndReloadParent();');
+	Assets::addInlineJs('closePopupAndReloadParent();');
 	break;
 }
 
@@ -2740,7 +2760,7 @@ function print_indi_form($nextaction, WT_Individual $person=null, WT_Family $fam
 	echo '<input type="button" class="cancel" value="', /* I18N: button label */ WT_I18N::translate('close'), '" onclick="window.close();">';
 	echo '</p>';
 	echo '</form>';
-	$controller->addInlineJavascript('
+	Assets::addInlineJs('
 	SURNAME_TRADITION="'.$SURNAME_TRADITION.'";
 	gender="'.$gender.'";
 	famtag="'.$famtag.'";
@@ -2910,8 +2930,8 @@ function check_record_access(WT_GedcomRecord $object=null) {
 
 	if (!$object || !$object->canShow() || !$object->canEdit()) {
 		$controller
-			->pageHeader()
-			->addInlineJavascript('closePopupAndReloadParent();');
+			->pageHeader();
+		Assets::addInlineJs('closePopupAndReloadParent();');
 		exit;
 	}
 }

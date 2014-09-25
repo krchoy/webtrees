@@ -18,6 +18,7 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+use WT\Assets;
 use WT\Auth;
 
 require_once WT_ROOT . 'includes/functions/functions_edit.php';
@@ -38,8 +39,16 @@ class batch_update {
 	// Main entry point - called by the webtrees framework in response to module.php?mod=batch_update
 	function main() {
 		// HTML common to all pages
+		Assets::addInlineJs('
+			function reset_reload() {
+				var bu_form = document.getElementById("batch_update_form");
+				bu_form.xref.value = "";
+				bu_form.action.value = "";
+				bu_form.data.value = "";
+				bu_form.submit();
+			}
+		');
 		$html=
-			self::getJavascript().
 			'<form id="batch_update_form" action="module.php" method="get">'.
 			'<input type="hidden" name="mod" value="batch_update">'.
 			'<input type="hidden" name="mod_action" value="admin_batch_update">'.
@@ -72,7 +81,7 @@ class batch_update {
 			if (substr($this->action, -4)=='_all') {
 				// Reset - otherwise we might "undo all changes", which refreshes the
 				// page, which makes them all again!
-				$html.='<script>reset_reload();</script>';
+				Assets::addInlineJs('reset_reload();');
 			} else {
 				if ($this->curr_xref) {
 					// Create an object, so we can get the latest version of the name.
@@ -245,20 +254,6 @@ class batch_update {
 		}
 		closedir($dir_handle);
 		return $array;
-	}
-
-	// Javascript that gets included on every page
-	static function getJavascript() {
-		return
-			'<script>'.
-			'function reset_reload() {'.
-			' var bu_form=document.getElementById("batch_update_form");'.
-			' bu_form.xref.value="";'.
-			' bu_form.action.value="";'.
-			' bu_form.data.value="";'.
-			' bu_form.submit();'.
-			'}</script>'
-		;
 	}
 
 	// Create a submit button for our form

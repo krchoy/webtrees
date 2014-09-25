@@ -21,6 +21,8 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+use WT\Assets;
+
 class relatives_WT_Module extends WT_Module implements WT_Module_Tab {
 	// Extend WT_Module
 	public function getTitle() {
@@ -314,7 +316,7 @@ class relatives_WT_Module extends WT_Module implements WT_Module_Tab {
 		}
 
 		if (!$SHOW_AGE_DIFF) {
-			echo '<script>jQuery("DIV.elderdate").toggle();</script>';
+			Assets::addInlineJs('jQuery("DIV.elderdate").toggle();');
 		}
 
 		if ($controller->record->canEdit()) {

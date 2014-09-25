@@ -21,6 +21,8 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+use WT\Assets;
+
 define('WT_SCRIPT_NAME', 'fanchart.php');
 require './includes/session.php';
 require WT_ROOT.'includes/functions/functions_edit.php';
@@ -35,9 +37,9 @@ if (WT_Filter::getBool('img')) {
 }
 
 $controller
-	->pageHeader()
-	->addExternalJavascript(WT_STATIC_URL . 'js/autocomplete.js')
-	->addInlineJavascript('
+	->pageHeader();
+Assets::addJs(WT_STATIC_URL . 'js/autocomplete.js');
+Assets::addInlineJs('
 		autocomplete();
 		var WT_FANCHART = (function() {
 			jQuery("area")

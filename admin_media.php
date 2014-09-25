@@ -16,6 +16,7 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+use WT\Assets;
 use WT\Auth;
 
 define('WT_SCRIPT_NAME', 'admin_media.php');
@@ -570,9 +571,9 @@ $controller = new WT_Controller_Page();
 $controller
 	->restrictAccess(Auth::isAdmin())
 	->setPageTitle(WT_I18N::translate('Media'))
-	->addExternalJavascript(WT_JQUERY_DATATABLES_URL)
-	->pageHeader()
-	->addInlineJavascript('
+	->pageHeader();
+Assets::addJs(WT_JQUERY_DATATABLES_URL);
+Assets::addInlineJs('
 	jQuery("#media-table-' . $table_id . '").dataTable({
 		dom: \'<"H"pf<"dt-clear">irl>t<"F"pl>\',
 		processing: true,

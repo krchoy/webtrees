@@ -28,11 +28,10 @@ $xref = WT_Filter::get('xref', WT_REGEX_XREF);
 $person = WT_Individual::getInstance($xref);
 check_record_access($person);
 
+Assets::addCss(WT_STATIC_URL . WT_MODULES_DIR . 'GEDFact_assistant/css/cens_style.css');
+
 $controller
 	->setPageTitle(WT_I18N::translate('Create a new shared note using assistant'))
-	->addInlineJavascript(
-		'jQuery("head").append(\'<link rel="stylesheet" href="' . WT_STATIC_URL . WT_MODULES_DIR . 'GEDFact_assistant/css/cens_style.css" type="text/css">\');'
-	)
 	->pageHeader();
 
 echo '<div id="edit_interface-page">';

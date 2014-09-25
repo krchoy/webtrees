@@ -19,9 +19,17 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+use WT\Assets;
+
 class tree_WT_Module extends WT_Module implements WT_Module_Tab {
-	var $headers; // CSS and script to include in the top of <head> section, before theme’s CSS
-	var $js; // the TreeViewHandler javascript
+	public function __construct() {
+		parent::__construct();
+
+		if (WT_SCRIPT_NAME === 'individual.php' || WT_SCRIPT_NAME === 'module.php' && WT_Filter::get('mod') === 'tree') {
+			Assets::addCss(WT_STATIC_URL . WT_MODULES_DIR . 'tree/css/treeview.css');
+			Assets::addJs(WT_STATIC_URL . WT_MODULES_DIR . 'tree/js/treeview.js');
+		}
+	}
 
 	// Extend WT_Module. This title should be normalized when this module will be added officially
 	public function getTitle() {
@@ -45,10 +53,11 @@ class tree_WT_Module extends WT_Module implements WT_Module_Tab {
 		require_once WT_MODULES_DIR . $this->getName() . '/class_treeview.php';
 		$tv = new TreeView('tvTab');
 		list($html, $js) = $tv->drawViewport($controller->record, 3);
-		return
-			'<script src="' . $this->js() . '"></script>' .
-			'<script>' . $js . '</script>' .
-			$html;
+
+		// Doesn't work.  The wrong controller?  Not sending its footer?
+		//Assets::addInlineJs($js);
+
+		return $html . '<script>' . $js . '</script>';
 	}
 
 	// Implement WT_Module_Tab
@@ -70,19 +79,7 @@ class tree_WT_Module extends WT_Module implements WT_Module_Tab {
 
 	// Implement WT_Module_Tab
 	public function getPreLoadContent() {
-		// We cannot use jQuery("head").append(<link rel="stylesheet" ...as jQuery is not loaded at this time
-		return
-			'<script>
-			if (document.createStyleSheet) {
-				document.createStyleSheet("' . $this->css() . '"); // For Internet Explorer
-			} else {
-				var newSheet=document.createElement("link");
-    		newSheet.setAttribute("rel","stylesheet");
-    		newSheet.setAttribute("type","text/css");
-   			newSheet.setAttribute("href","' . $this->css() . '");
-		    document.getElementsByTagName("head")[0].appendChild(newSheet);
-			}
-			</script>';
+		return '';
 	}
 
 	// Extend WT_Module
@@ -99,24 +96,15 @@ class tree_WT_Module extends WT_Module implements WT_Module_Tab {
 			global $controller;
 			$controller = new WT_Controller_Chart();
 			$tv = new TreeView('tv');
-			ob_start();
 
 			$person = $controller->getSignificantIndividual();
 
-			list($html, $js) = $tv->drawViewport($person, 4);
-
 			$controller
 				->setPageTitle(WT_I18N::translate('Interactive tree of %s', $person->getFullName()))
-				->pageHeader()
-				->addExternalJavascript($this->js())
-				->addInlineJavascript($js)
-				->addInlineJavascript('
-					if (document.createStyleSheet) {
-						document.createStyleSheet("' . $this->css() . '"); // For Internet Explorer
-					} else {
-						jQuery("head").append(\'<link rel="stylesheet" type="text/css" href="' . $this->css() . '">\');
-					}
-				');
+				->pageHeader();
+
+			list($html, $js) = $tv->drawViewport($person, 4);
+			Assets::addInlineJs($js);
 			echo $html;
 			break;
 
@@ -145,13 +133,5 @@ class tree_WT_Module extends WT_Module implements WT_Module_Tab {
 			header('HTTP/1.0 404 Not Found');
 			break;
 		}
-	}
-
-	public function css() {
-		return WT_STATIC_URL . WT_MODULES_DIR . $this->getName() . '/css/treeview.css';
-	}
-
-	public function js() {
-		return WT_STATIC_URL . WT_MODULES_DIR . $this->getName() . '/js/treeview.js';
 	}
 }

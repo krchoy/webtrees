@@ -29,7 +29,7 @@
 // CONFIG notes. Below are some comments that point to where this script can be customized.
 // Note: Make sure to include a <tbody></tbody> in your table’s HTML
 
-echo '<script src="', WT_STATIC_URL, WT_MODULES_DIR, 'GEDFact_assistant/_CENS/js/chapman_codes.js"></script>';
+Assets::addJs(WT_STATIC_URL, WT_MODULES_DIR, 'GEDFact_assistant/_CENS/js/chapman_codes.js');
 ?>
 <script>
 

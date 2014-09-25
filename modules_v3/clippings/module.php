@@ -21,6 +21,8 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+use WT\Assets;
+
 class clippings_WT_Module extends WT_Module implements WT_Module_Menu, WT_Module_Sidebar {
 	// Extend class WT_Module
 	public function getTitle() {
@@ -57,9 +59,10 @@ class clippings_WT_Module extends WT_Module implements WT_Module_Menu, WT_Module
 			$controller = new WT_Controller_Page();
 			$controller
 				->setPageTitle($this->getTitle())
-				->PageHeader()
-				->addExternalJavascript(WT_STATIC_URL . 'js/autocomplete.js')
-				->addInlineJavascript('autocomplete();');
+				->PageHeader();
+
+			Assets::addJs(WT_STATIC_URL . 'js/autocomplete.js');
+			Assets::addInlineJs('autocomplete();');
 
 			echo '<script>';
 			echo 'function radAncestors(elementid) {var radFamilies=document.getElementById(elementid);radFamilies.checked=true;}';
@@ -343,9 +346,7 @@ class clippings_WT_Module extends WT_Module implements WT_Module_Menu, WT_Module
 
 	// Impelement WT_Module_Sidebar
 	public function getSidebarContent() {
-		global $controller;
-
-		$controller->addInlineJavascript('
+		Assets::addInlineJs('
 				jQuery("#sb_clippings_content").on("click", ".add_cart, .remove_cart", function() {
 					jQuery("#sb_clippings_content").load(this.href);
 					return false;
@@ -472,14 +473,16 @@ class clippings_WT_Module extends WT_Module implements WT_Module_Menu, WT_Module
 	public function askAddOptions($person) {
 		global $MAX_PEDIGREE_GENERATIONS;
 		$out = '<h3><a href="'.$person->getHtmlUrl().'">'.$person->getFullName().'</a></h3>';
-		$out .= '<script>';
-		$out .= 'function radAncestors(elementid) {var radFamilies=document.getElementById(elementid);radFamilies.checked=true;}
+
+		Assets::addInlineJs('
+			function radAncestors(elementid) {var radFamilies=document.getElementById(elementid);radFamilies.checked=true;}
 			function continueAjax(frm) {
 				var others = jQuery("input[name=\'others\']:checked").val();
 				var link = "module.php?mod='.$this->getName().'&mod_action=ajax&sb_action=clippings&add1="+frm.pid.value+"&others="+others+"&level1="+frm.level1.value+"&level2="+frm.level2.value+"&level3="+frm.level3.value;
 				jQuery("#sb_clippings_content").load(link);
-			}';
-		$out .= '</script>';
+			}
+		');
+
 		if ($person::RECORD_TYPE=='FAM') {
 			$out .= '<form action="module.php" method="get" onsubmit="continueAjax(this); return false;">
 			<input type="hidden" name="mod" value="clippings">
@@ -540,13 +543,14 @@ class clippings_WT_Module extends WT_Module implements WT_Module_Menu, WT_Module
 		global $GEDCOM_MEDIA_PATH;
 		$pid=WT_Filter::get('pid', WT_REGEX_XREF);
 
-		$out = '<script>';
-		$out .= 'function cancelDownload() {
+		Assets::addInlineJs('
+			function cancelDownload() {
 				var link = "module.php?mod=' . $this->getName() . '&mod_action=ajax&sb_action=clippings&pid=' . $pid . '";
 				jQuery("#sb_clippings_content").load(link);
-			}';
-		$out .= '</script>';
-		$out .= '<form method="get" action="module.php">
+			}
+		');
+
+		$out = '<form method="get" action="module.php">
 		<input type="hidden" name="mod" value="clippings">
 		<input type="hidden" name="mod_action" value="index">
 		<input type="hidden" name="pid" value="'.$pid.'">

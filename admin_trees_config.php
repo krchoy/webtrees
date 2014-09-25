@@ -21,6 +21,7 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+use WT\Assets;
 use WT\Auth;
 use WT\User;
 
@@ -209,11 +210,10 @@ case 'update':
 }
 
 $controller
-	->pageHeader()
-	->addInlineJavascript('jQuery("#tabs").tabs(); jQuery("#tabs").css("display", "inline");')
-	->addExternalJavascript(WT_STATIC_URL . 'js/autocomplete.js')
-	->addInlineJavascript('autocomplete();');
-
+	->pageHeader();
+Assets::addInlineJs('jQuery("#tabs").tabs(); jQuery("#tabs").css("display", "inline");');
+Assets::addJs(WT_STATIC_URL . 'js/autocomplete.js');
+Assets::addInlineJs('autocomplete();');
 
 ?>
 <form enctype="multipart/form-data" method="post" id="configform" name="configform" action="<?php echo WT_SCRIPT_NAME; ?>">

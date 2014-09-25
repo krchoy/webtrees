@@ -18,6 +18,7 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+use WT\Assets;
 use WT\Auth;
 use WT\User;
 
@@ -26,13 +27,14 @@ define('WT_SCRIPT_NAME', 'admin.php');
 require './includes/session.php';
 require WT_ROOT . 'includes/functions/functions_edit.php';
 
+Assets::addInlineJs('jQuery("#x").accordion({heightStyle: "content"});');
+Assets::addInlineJs('jQuery("#tree_stats").accordion();');
+Assets::addInlineJs('jQuery("#changes").accordion();');
+Assets::addInlineJs('jQuery("#content_container").css("visibility", "visible");');
+
 $controller = new WT_Controller_Page();
 $controller
 	->restrictAccess(Auth::isManager())
-	->addInlineJavascript('jQuery("#x").accordion({heightStyle: "content"});')
-	->addInlineJavascript('jQuery("#tree_stats").accordion();')
-	->addInlineJavascript('jQuery("#changes").accordion();')
-	->addInlineJavascript('jQuery("#content_container").css("visibility", "visible");')
 	->setPageTitle(WT_I18N::translate('Administration'))
 	->pageHeader();
 

@@ -22,6 +22,8 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+use WT\Assets;
+
 define('WT_SCRIPT_NAME', 'source.php');
 require './includes/session.php';
 require_once WT_ROOT.'includes/functions/functions_print_lists.php';
@@ -74,7 +76,7 @@ if ($controller->record && $controller->record->canShow()) {
 	exit;
 }
 
-$controller->addInlineJavascript('
+Assets::addInlineJs('
 	jQuery("#source-tabs")
 		.tabs({
 			create: function(e, ui){

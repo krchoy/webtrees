@@ -98,38 +98,37 @@ if ($form_action=='update' && WT_Filter::checkCsrf()) {
 $controller = new WT_Controller_Page();
 $controller
 	->setPageTitle(WT_I18N::translate('User administration'))
-	->pageHeader()
-	->addExternalJavascript(WT_STATIC_URL . 'js/autocomplete.js')
-	->addInlineJavascript('autocomplete();');
+	->pageHeader();
+
+Assets::addJs(WT_STATIC_URL . 'js/autocomplete.js');
+Assets::addInlineJs('autocomplete();');
 
 // Form validation
-?>
-<script>
+Assets::addInlineJs('
 function checkform(frm) {
 	if (frm.form_username.value=="") {
-		alert("<?php echo WT_I18N::translate('You must enter a user name.'); ?>");
+		alert("' . WT_I18N::translate('You must enter a user name.') . '");
 		frm.form_username.focus();
 		return false;
 	}
 	if (frm.form_realname.value=="") {
-		alert("<?php echo WT_I18N::translate('You must enter a real name.'); ?>");
+		alert("' . WT_I18N::translate('You must enter a real name.') . '");
 		frm.form_realname.focus();
 		return false;
 	}
 	if (frm.form_pass1.value!=frm.form_pass2.value) {
-		alert("<?php echo WT_I18N::translate('Passwords do not match.'); ?>");
+		alert("' . WT_I18N::translate('Passwords do not match.') . '");
 		frm.form_pass1.focus();
 		return false;
 	}
 	if (frm.form_pass1.value.length > 0 && frm.form_pass1.value.length < 6) {
-		alert("<?php echo WT_I18N::translate('Passwords must contain at least 6 characters.'); ?>");
+		alert("' . WT_I18N::translate('Passwords must contain at least 6 characters.') . '");
 		frm.form_pass1.focus();
 		return false;
 	}
 	return true;
 }
-</script>
-<?php
+');
 
 // show the form to edit a user account details
 echo '<div id="edituser-page">

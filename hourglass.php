@@ -23,16 +23,24 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+use WT\Assets;
+
 define('WT_SCRIPT_NAME', 'hourglass.php');
 require './includes/session.php';
 require_once WT_ROOT.'includes/functions/functions_edit.php';
 
 $controller = new WT_Controller_Hourglass();
-$controller
-	->pageHeader()
-	->addExternalJavascript(WT_STATIC_URL . 'js/autocomplete.js')
-	->addInlineJavascript('autocomplete();')
-	->setupJavascript();
+$controller->pageHeader();
+
+Assets::addJs(WT_STATIC_URL . 'js/autocomplete.js');
+Assets::addInlineJs('autocomplete();');
+Assets::addInlineJs('
+	sizeLines();
+	jQuery("#childarrow").on("click", "a", function(e) {
+		e.preventDefault();
+		jQuery("#childbox").toggle();
+	});
+');
 
 $gencount = 0;
 

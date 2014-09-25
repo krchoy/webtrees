@@ -25,11 +25,13 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+use WT\Assets;
+
 define('WT_SCRIPT_NAME', 'individual.php');
 require './includes/session.php';
 $controller = new WT_Controller_Individual();
-$controller
-	->addExternalJavascript(WT_JQUERY_COOKIE_URL); // We use this to record the sidebar state
+
+Assets::addJs(WT_JQUERY_COOKIE_URL); // We use this to record the sidebar state
 
 if ($controller->record && $controller->record->canShow()) {
 	if (WT_Filter::get('action')=='ajax') {
@@ -91,7 +93,7 @@ if ($controller->record && $controller->record->canShow()) {
 	exit;
 }
 
-$controller->addInlineJavascript('
+Assets::addInlineJs('
 var WT_INDIVIDUAL = (function () {
 
 	var instance,

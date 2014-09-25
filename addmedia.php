@@ -22,6 +22,7 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+use WT\Assets;
 use WT\Auth;
 use WT\Log;
 
@@ -43,10 +44,9 @@ $folder      = WT_Filter::post('folder');
 $update_CHAN = !WT_Filter::postBool('preserve_last_changed');
 
 $controller = new WT_Controller_Simple();
-$controller
-	->addExternalJavascript(WT_STATIC_URL . 'js/autocomplete.js')
-	->addInlineJavascript('autocomplete();')
-	->restrictAccess(Auth::isMember());
+$controller->restrictAccess(Auth::isMember());
+Assets::addJs(WT_STATIC_URL . 'js/autocomplete.js');
+Assets::addInlineJs('autocomplete();');
 
 $disp = true;
 $media = WT_Media::getInstance($pid);
@@ -61,8 +61,8 @@ if ($action=='update' || $action=='create') {
 
 if (!WT_USER_CAN_EDIT || !$disp) {
 	$controller
-		->pageHeader()
-		->addInlineJavascript('closePopupAndReloadParent();');
+		->pageHeader();
+	Assets::addInlineJs('closePopupAndReloadParent();');
 	exit;
 }
 
@@ -222,10 +222,10 @@ case 'create': // Save the information from the “showcreateform” action
 		$record = WT_GedcomRecord::getInstance($linktoid);
 		$record->createFact('1 OBJE @' . $media->getXref() . '@', true);
 		Log::addEditLog('Media ID '.$media->getXref()." successfully added to $linktoid.");
-		$controller->addInlineJavascript('closePopupAndReloadParent();');
+		Assets::addInlineJs('closePopupAndReloadParent();');
 	} else {
 		Log::addEditLog('Media ID '.$media->getXref().' successfully added.');
-		$controller->addInlineJavascript('openerpasteid("' . $media->getXref() . '");');
+		Assets::addInlineJs('openerpasteid("' . $media->getXref() . '");');
 	}
 	echo '<button onclick="closePopupAndReloadParent();">', WT_I18N::translate('close'), '</button>';
 	exit;
@@ -381,7 +381,7 @@ case 'update': // Save the information from the “editmedia” action
 	if ($messages) {
 		echo '<button onclick="closePopupAndReloadParent();">', WT_I18N::translate('close'), '</button>';
 	} else {
-		$controller->addInlineJavascript('closePopupAndReloadParent();');
+		Assets::addInlineJs('closePopupAndReloadParent();');
 	}
 	exit;
 case 'showmediaform':
@@ -544,7 +544,7 @@ else {
 $formid = add_simple_tag("2 $gedform");
 
 // automatically set the format field from the filename
-$controller->addInlineJavascript('
+Assets::addInlineJs('
 	function updateFormat(filename) {
 		var extsearch=/\.([a-zA-Z]{3,4})$/;
 		if (extsearch.exec(filename)) {

@@ -26,6 +26,7 @@
 // GEDFact Media assistant replacement code for inverselink.php: ===========================
 
 //-- extra page parameters and checking
+use WT\Assets;
 use WT\Auth;
 
 $more_links  = WT_Filter::get('more_links');
@@ -33,9 +34,8 @@ $exist_links = WT_Filter::get('exist_links');
 $gid         = WT_Filter::get('gid', WT_REGEX_XREF);
 $update_CHAN = WT_Filter::get('preserve_last_changed');
 
-$controller
-	->addExternalJavascript(WT_STATIC_URL . 'js/autocomplete.js')
-	->addInlineJavascript('autocomplete();');
+Assets::addJs(WT_STATIC_URL . 'js/autocomplete.js');
+Assets::addInlineJs('autocomplete();');
 
 $paramok =  true;
 if (!empty($linktoid)) $paramok = WT_GedcomRecord::getInstance($linktoid)->canShow();
@@ -607,5 +607,5 @@ function shiftlinks() {
 			$indi->createFact('1 OBJE @' . $mediaid . '@', $update_CHAN!='no_change');
 		}
 	}
-	$controller->addInlineJavascript('closePopupAndReloadParent();');
+	Assets::addInlineJs('closePopupAndReloadParent();');
 }

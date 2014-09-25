@@ -18,6 +18,7 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+use WT\Assets;
 use WT\Auth;
 use WT\User;
 
@@ -214,10 +215,10 @@ case 'load_json':
 	exit;
 }
 
-$controller
-	->pageHeader()
-	->addExternalJavascript(WT_JQUERY_DATATABLES_URL)
-	->addInlineJavascript('
+$controller->pageHeader();
+
+Assets::addJs(WT_JQUERY_DATATABLES_URL);
+Assets::addInlineJs('
 		jQuery("#log_list").dataTable( {
 			"dom": \'<"H"pf<"dt-clear">irl>t<"F"pl>\',
 			"processing": true,

@@ -21,6 +21,7 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+use WT\Assets;
 use WT\Auth;
 
 if (!defined('WT_WEBTREES')) {
@@ -31,11 +32,12 @@ if (!defined('WT_WEBTREES')) {
 global $WT_IMAGES;
 
 // This theme uses the jQuery “colorbox” plugin to display images
-$this
-	->addExternalJavascript(WT_JQUERY_COLORBOX_URL)
-	->addExternalJavascript(WT_JQUERY_WHEELZOOM_URL)
-	->addInlineJavascript('activate_colorbox();')
-	->addInlineJavascript('jQuery.extend(jQuery.colorbox.settings, { width:"85%", height:"85%", transition:"none", slideshowStart:"'. WT_I18N::translate('Play').'", slideshowStop:"'. WT_I18N::translate('Stop').'", title: function() { var img_title = jQuery(this).data("title"); return img_title; } } );');
+Assets::addCss(WT_THEME_URL . 'jquery-ui-1.10.3/jquery-ui-1.10.3.custom.css');
+Assets::addCss(WT_CSS_URL . 'style.css');
+Assets::addJs(WT_JQUERY_COLORBOX_URL);
+Assets::addJs(WT_JQUERY_WHEELZOOM_URL);
+Assets::addInlineJs('activate_colorbox();');
+Assets::addInlineJs('jQuery.extend(jQuery.colorbox.settings, { width:"85%", height:"85%", transition:"none", slideshowStart:"'. WT_I18N::translate('Play').'", slideshowStop:"'. WT_I18N::translate('Stop').'", title: function() { var img_title = jQuery(this).data("title"); return img_title; } } );');
 ?>
 <!DOCTYPE html>
 <html <?php echo WT_I18N::html_markup(); ?>>
@@ -45,8 +47,7 @@ $this
 	<?php echo header_links($META_DESCRIPTION, $META_ROBOTS, $META_GENERATOR, $LINK_CANONICAL); ?>
 	<title><?php echo WT_Filter::escapeHtml($title); ?></title>
 	<link rel="icon" href="<?php echo WT_CSS_URL; ?>favicon.png" type="image/png">
-	<link rel="stylesheet" type="text/css" href="<?php echo WT_THEME_URL; ?>jquery-ui-1.10.3/jquery-ui-1.10.3.custom.css">
-	<link rel="stylesheet" type="text/css" href="<?php echo WT_CSS_URL; ?>style.css">
+	<?php echo Assets::css(); ?>
 	<!--[if IE]>
 	<link rel="stylesheet" type="text/css" href="<?php echo WT_CSS_URL; ?>msie.css">
 	<![endif]-->
@@ -97,6 +98,5 @@ $this
 		</div>
 	</div>
 	<?php } ?>
-	<?php echo $javascript; ?>
 	<?php echo WT_FlashMessages::getHtmlMessages(); ?>
 	<div id="content">

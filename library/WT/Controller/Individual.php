@@ -19,6 +19,7 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+use WT\Assets;
 use WT\Auth;
 use WT\User;
 
@@ -390,8 +391,6 @@ class WT_Controller_Individual extends WT_Controller_GedcomRecord {
 	 * @return string
 	 */
 	public function getSideBarContent() {
-		global $controller;
-
 		$html='';
 		$active=0;
 		$n=0;
@@ -408,8 +407,7 @@ class WT_Controller_Individual extends WT_Controller_GedcomRecord {
 		}
 
 		if ($html) {
-			$controller
-				->addInlineJavascript('
+			Assets::addInlineJs('
 				jQuery("#sidebarAccordion").accordion({
 					active:' . $active . ',
 					heightStyle: "content",

@@ -23,7 +23,7 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
- if (!defined('WT_WEBTREES')) {
+ use WT\Assets;if (!defined('WT_WEBTREES')) {
 	header('HTTP/1.0 403 Forbidden');
 	exit;
 }
@@ -53,13 +53,10 @@ $fulln = str_replace("@N.N.", "(".WT_I18N::translate('unknown').")", $fulln);
 $fulln = str_replace("@P.N.", "(".WT_I18N::translate('unknown').")", $fulln);
 $wholename = $fulln;
 
-echo '<script src="', WT_STATIC_URL, WT_MODULES_DIR, 'GEDFact_assistant/_CENS/js/dynamicoptionlist.js"></script>';
-echo '<script src="', WT_STATIC_URL, WT_MODULES_DIR, 'GEDFact_assistant/_CENS/js/date.js"></script>';
-
-echo '<script>';
-echo 'var TheCenYear = opener.document.getElementById("setyear").value;';
-echo 'var TheCenCtry = opener.document.getElementById("setctry").value;';
-echo '</script>';
+Assets::addJs(WT_STATIC_URL . WT_MODULES_DIR . 'GEDFact_assistant/_CENS/js/dynamicoptionlist.js');
+Assets::addJs(WT_STATIC_URL . WT_MODULES_DIR . 'GEDFact_assistant/_CENS/js/date.js');
+Assets::addInlineJs('var TheCenYear = opener.document.getElementById("setyear").value;');
+Assets::addInlineJs('var TheCenCtry = opener.document.getElementById("setctry").value;');
 
 // Header of assistant window =====================================================
 echo '<div class="cens_header">';

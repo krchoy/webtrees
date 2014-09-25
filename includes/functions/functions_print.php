@@ -24,6 +24,7 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 use Rhumsaa\Uuid\Uuid;
+use WT\Assets;
 use WT\Auth;
 use WT\User;
 
@@ -1031,9 +1032,9 @@ function print_add_new_fact($id, $usedfacts, $type) {
  * javascript declaration for calendar popup
  */
 function init_calendar_popup() {
-	global $WEEK_START, $controller;
+	global $WEEK_START;
 
-	$controller->addInlineJavascript('
+	Assets::addInlineJs('
 		cal_setMonthNames(
 			"' . WT_I18N::translate_c('NOMINATIVE', 'January') . '",
 			"' . WT_I18N::translate_c('NOMINATIVE', 'February') . '",

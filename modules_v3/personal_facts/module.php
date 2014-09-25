@@ -21,6 +21,8 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+use WT\Assets;
+
 class personal_facts_WT_Module extends WT_Module implements WT_Module_Tab {
 	// Extend WT_Module
 	public function getTitle() {
@@ -143,10 +145,10 @@ class personal_facts_WT_Module extends WT_Module implements WT_Module_Tab {
 		echo '</table>';
 
 		if (!$EXPAND_RELATIVES_EVENTS) {
-			echo '<script>jQuery("tr.rela").toggle();</script>';
+			Assets::addInlineJs('jQuery("tr.rela").toggle();');
 		}
 		if (!$EXPAND_HISTO_EVENTS) {
-			echo '<script>jQuery("tr.histo").toggle();</script>';
+			Assets::addInlineJs('jQuery("tr.histo").toggle();');
 		}
 
 

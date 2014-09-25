@@ -21,6 +21,8 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+use WT\Assets;
+
 class descendancy_WT_Module extends WT_Module implements WT_Module_Sidebar {
 	// Extend WT_Module
 	public function getTitle() {
@@ -78,7 +80,7 @@ class descendancy_WT_Module extends WT_Module implements WT_Module_Sidebar {
 	public function getSidebarContent() {
 		global $controller;
 
-		$controller->addInlineJavascript('
+		Assets::addInlineJs('
 			function dsearchQ() {
 				var query = jQuery("#sb_desc_name").val();
 				if (query.length>1) {

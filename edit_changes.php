@@ -21,6 +21,7 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+use WT\Assets;
 use WT\Auth;
 use WT\Log;
 
@@ -31,8 +32,9 @@ $controller = new WT_Controller_Simple();
 $controller
 	->restrictAccess(Auth::isModerator())
 	->setPageTitle(WT_I18N::translate('Pending changes'))
-	->pageHeader()
-	->addInlineJavascript("
+	->pageHeader();
+
+Assets::addInlineJs("
 		function show_diff(diffurl) {
 			window.opener.location = diffurl;
 			return false;
@@ -237,7 +239,7 @@ if ($changed_gedcoms) {
 		'</p>';
 } else {
 	// No pending changes - refresh the parent window and close this one
-	$controller->addInlineJavascript('closePopupAndReloadParent();');
+	Assets::addInlineJs('closePopupAndReloadParent();');
 }
 
 echo '</div>';

@@ -21,6 +21,8 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+use WT\Assets;
+
 class GEDFact_assistant_WT_Module extends WT_Module {
 	// Extend WT_Module
 	public function getTitle() {
@@ -315,7 +317,7 @@ class GEDFact_assistant_WT_Module extends WT_Module {
 			return '';
 		}
 
-		$controller->addInlineJavascript('
+		Assets::addInlineJs('
 			var pid_array=jQuery("#pid_array");
 			function set_pid_array(pa) {
 				pid_array.val(pa);
@@ -332,10 +334,8 @@ class GEDFact_assistant_WT_Module extends WT_Module {
 
 	// Add a selector containing UK/US/FR census dates
 	public static function censusDateSelector($action, $tag, $element_id) {
-		global $controller;
-
 		if ($action == 'add' && $tag == 'CENS') {
-			$controller->addInlineJavascript('
+			Assets::addInlineJs('
 				function addDate(theCensDate) {
 					var ddate = theCensDate.split(", ");
 					document.getElementById("setctry").value = ddate[3];

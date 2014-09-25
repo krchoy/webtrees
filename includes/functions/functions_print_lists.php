@@ -25,6 +25,7 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 use Rhumsaa\Uuid\Uuid;
+use WT\Assets;
 
 /**
  * Print a table of individuals
@@ -40,9 +41,8 @@ function format_indi_table($datalist, $option = '') {
 	$table_id = 'table-indi-' . Uuid::uuid4(); // lists requires a unique ID in case there are multiple lists per page
 	$SHOW_EST_LIST_DATES = $WT_TREE->getPreference('SHOW_EST_LIST_DATES');
 
-	$controller
-		->addExternalJavascript(WT_JQUERY_DATATABLES_URL)
-		->addInlineJavascript('
+	Assets::addJs(WT_JQUERY_DATATABLES_URL);
+	Assets::addInlineJs('
 			jQuery.fn.dataTableExt.oSort["unicode-asc"  ]=function(a,b) {return a.replace(/<[^<]*>/, "").localeCompare(b.replace(/<[^<]*>/, ""))};
 			jQuery.fn.dataTableExt.oSort["unicode-desc" ]=function(a,b) {return b.replace(/<[^<]*>/, "").localeCompare(a.replace(/<[^<]*>/, ""))};
 			jQuery.fn.dataTableExt.oSort["num-html-asc" ]=function(a,b) {a=parseFloat(a.replace(/<[^<]*>/, "")); b=parseFloat(b.replace(/<[^<]*>/, "")); return (a<b) ? -1 : (a>b ? 1 : 0);};
@@ -524,13 +524,12 @@ function format_indi_table($datalist, $option = '') {
  * @return string
  */
 function format_fam_table($datalist) {
-	global $GEDCOM, $SHOW_LAST_CHANGE, $SEARCH_SPIDER, $controller;
+	global $GEDCOM, $SHOW_LAST_CHANGE, $SEARCH_SPIDER;
 
 	$table_id = 'table-fam-' . Uuid::uuid4(); // lists requires a unique ID in case there are multiple lists per page
 
-	$controller
-		->addExternalJavascript(WT_JQUERY_DATATABLES_URL)
-		->addInlineJavascript('
+	Assets::addJs(WT_JQUERY_DATATABLES_URL);
+	Assets::addInlineJs('
 			jQuery.fn.dataTableExt.oSort["unicode-asc" ]=function(a,b) {return a.replace(/<[^<]*>/, "").localeCompare(b.replace(/<[^<]*>/, ""))};
 			jQuery.fn.dataTableExt.oSort["unicode-desc"]=function(a,b) {return b.replace(/<[^<]*>/, "").localeCompare(a.replace(/<[^<]*>/, ""))};
 			jQuery("#' . $table_id . '").dataTable( {
@@ -1037,12 +1036,12 @@ function format_fam_table($datalist) {
  * @return string
  */
 function format_sour_table($datalist) {
-	global $SHOW_LAST_CHANGE, $controller;
+	global $SHOW_LAST_CHANGE;
+
 	$html = '';
 	$table_id = 'table-sour-' . Uuid::uuid4(); // lists requires a unique ID in case there are multiple lists per page
-	$controller
-		->addExternalJavascript(WT_JQUERY_DATATABLES_URL)
-		->addInlineJavascript('
+	Assets::addJs(WT_JQUERY_DATATABLES_URL);
+	Assets::addInlineJs('
 			jQuery.fn.dataTableExt.oSort["unicode-asc" ]=function(a,b) {return a.replace(/<[^<]*>/, "").localeCompare(b.replace(/<[^<]*>/, ""))};
 			jQuery.fn.dataTableExt.oSort["unicode-desc"]=function(a,b) {return b.replace(/<[^<]*>/, "").localeCompare(a.replace(/<[^<]*>/, ""))};
 			jQuery("#' . $table_id . '").dataTable( {
@@ -1177,12 +1176,12 @@ function format_sour_table($datalist) {
  * @return string
  */
 function format_note_table($datalist) {
-	global $SHOW_LAST_CHANGE, $controller;
+	global $SHOW_LAST_CHANGE;
+
 	$html = '';
 	$table_id = 'table-note-' . Uuid::uuid4(); // lists requires a unique ID in case there are multiple lists per page
-	$controller
-		->addExternalJavascript(WT_JQUERY_DATATABLES_URL)
-		->addInlineJavascript('
+	Assets::addJs(WT_JQUERY_DATATABLES_URL);
+	Assets::addInlineJs('
 			jQuery.fn.dataTableExt.oSort["unicode-asc" ]=function(a,b) {return a.replace(/<[^<]*>/, "").localeCompare(b.replace(/<[^<]*>/, ""))};
 			jQuery.fn.dataTableExt.oSort["unicode-desc"]=function(a,b) {return b.replace(/<[^<]*>/, "").localeCompare(a.replace(/<[^<]*>/, ""))};
 			jQuery("#' . $table_id . '").dataTable({
@@ -1291,13 +1290,12 @@ function format_note_table($datalist) {
  * @return string
  */
 function format_repo_table($repositories) {
-	global $SHOW_LAST_CHANGE, $controller;
+	global $SHOW_LAST_CHANGE;
 
 	$html = '';
 	$table_id = 'table-repo-' . Uuid::uuid4(); // lists requires a unique ID in case there are multiple lists per page
-	$controller
-		->addExternalJavascript(WT_JQUERY_DATATABLES_URL)
-		->addInlineJavascript('
+	Assets::addJs(WT_JQUERY_DATATABLES_URL);
+	Assets::addInlineJs('
 			jQuery.fn.dataTableExt.oSort["unicode-asc" ]=function(a,b) {return a.replace(/<[^<]*>/, "").localeCompare(b.replace(/<[^<]*>/, ""))};
 			jQuery.fn.dataTableExt.oSort["unicode-desc"]=function(a,b) {return b.replace(/<[^<]*>/, "").localeCompare(a.replace(/<[^<]*>/, ""))};
 			jQuery("#' . $table_id . '").dataTable({
@@ -1397,13 +1395,12 @@ function format_repo_table($repositories) {
  * @return string
  */
 function format_media_table($media_objects) {
-	global $SHOW_LAST_CHANGE, $controller;
+	global $SHOW_LAST_CHANGE;
 
 	$html = '';
 	$table_id = 'table-obje-' . Uuid::uuid4(); // lists requires a unique ID in case there are multiple lists per page
-	$controller
-		->addExternalJavascript(WT_JQUERY_DATATABLES_URL)
-		->addInlineJavascript('
+	Assets::addJs(WT_JQUERY_DATATABLES_URL);
+	Assets::addInlineJs('
 			jQuery.fn.dataTableExt.oSort["unicode-asc" ]=function(a,b) {return a.replace(/<[^<]*>/, "").localeCompare(b.replace(/<[^<]*>/, ""))};
 			jQuery.fn.dataTableExt.oSort["unicode-desc"]=function(a,b) {return b.replace(/<[^<]*>/, "").localeCompare(a.replace(/<[^<]*>/, ""))};
 			jQuery("#' . $table_id . '").dataTable({
@@ -1510,11 +1507,9 @@ function format_media_table($media_objects) {
  * @return string
  */
 function format_surname_table($surnames, $script) {
-	global $controller;
 	$html = '';
-	$controller
-		->addExternalJavascript(WT_JQUERY_DATATABLES_URL)
-		->addInlineJavascript('
+	Assets::addJs(WT_JQUERY_DATATABLES_URL);
+	Assets::addInlineJs('
 			jQuery.fn.dataTableExt.oSort["num-asc" ]=function(a,b) {a=parseFloat(a); b=parseFloat(b); return (a<b) ? -1 : (a>b ? 1 : 0);};
 			jQuery.fn.dataTableExt.oSort["num-desc"]=function(a,b) {a=parseFloat(a); b=parseFloat(b); return (a>b) ? -1 : (a<b ? 1 : 0);};
 			jQuery(".surname-list").dataTable( {
@@ -1780,8 +1775,6 @@ function print_changes_list($change_ids, $sort) {
  * @return string
  */
 function print_changes_table($change_ids, $sort) {
-	global $controller;
-
 	$n = 0;
 	$table_id = 'table-chan-' . Uuid::uuid4(); // lists requires a unique ID in case there are multiple lists per page
 	switch ($sort) {
@@ -1796,9 +1789,8 @@ function print_changes_table($change_ids, $sort) {
 		break;
 	}
 	$html = '';
-	$controller
-		->addExternalJavascript(WT_JQUERY_DATATABLES_URL)
-		->addInlineJavascript('
+	Assets::addJs(WT_JQUERY_DATATABLES_URL);
+	Assets::addInlineJs('
 			jQuery.fn.dataTableExt.oSort["unicode-asc" ]=function(a,b) {return a.replace(/<[^<]*>/, "").localeCompare(b.replace(/<[^<]*>/, ""))};
 			jQuery.fn.dataTableExt.oSort["unicode-desc"]=function(a,b) {return b.replace(/<[^<]*>/, "").localeCompare(a.replace(/<[^<]*>/, ""))};
 			jQuery("#' . $table_id . '").dataTable({
@@ -1906,10 +1898,9 @@ function print_events_table($startjd, $endjd, $events = 'BIRT MARR DEAT', $only_
 	global $controller;
 	$html = '';
 	$table_id = 'table-even-' . Uuid::uuid4(); // lists requires a unique ID in case there are multiple lists per page
-	$controller
-		->addExternalJavascript(WT_JQUERY_DATATABLES_URL)
-		->addInlineJavascript('
-			jQuery("#' . $table_id . '").dataTable({
+	Assets::addJs(WT_JQUERY_DATATABLES_URL);
+	Assets::addInlineJs('
+			jQuery("#'.$table_id.'").dataTable({
 				dom: \'t\',
 				' . WT_I18N::datatablesI18N() . ',
 				autoWidth: false,

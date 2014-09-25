@@ -21,6 +21,8 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+use WT\Assets;
+
 class ckeditor_WT_Module extends WT_Module {
 	const VERSION = 'ckeditor-4.4.1-custom';
 
@@ -40,22 +42,19 @@ class ckeditor_WT_Module extends WT_Module {
 	 * This function needs to be called *after* we have sent the page header and
 	 * before we have sent the page footer.
 	 *
-	 * @param WT_Controller_Base $controller
-	 *
 	 * @return void
 	 */
-	public static function enableEditor($controller) {
-		$controller
-			->addExternalJavascript(WT_MODULES_DIR . 'ckeditor/' . self::VERSION . '/ckeditor.js')
-			->addExternalJavascript(WT_MODULES_DIR . 'ckeditor/' . self::VERSION . '/adapters/jquery.js')
-			// Need to specify the path before we load the libary
-			->addInlineJavascript(
-				'var CKEDITOR_BASEPATH="' . WT_MODULES_DIR . 'ckeditor/' . self::VERSION . '/";',
-				WT_Controller_Base::JS_PRIORITY_HIGH
-			)
-			// Activate the editor
-			->addInlineJavascript('jQuery(".html-edit").ckeditor(function(){}, {
-				language: "' . str_replace('_','-',strtolower(WT_LOCALE)) . '"
-			});');
+	public static function enableEditor() {
+		// The ckeditor library attempts to detect its own installation directory, so it can
+		// generate URLs to its other resources.  When an asset pipeline is used, this detection
+		// fails.  Therefore we need to tell it the original installation path, and we need
+		// do this (in the current version at least) *before* loading the library.
+		echo '<script>var CKEDITOR_BASEPATH="' . WT_MODULES_DIR . 'ckeditor/' . self::VERSION . '/";</script>';
+
+		Assets::addJs(WT_MODULES_DIR . 'ckeditor/' . self::VERSION . '/ckeditor.js');
+		Assets::addJs(WT_MODULES_DIR . 'ckeditor/' . self::VERSION . '/adapters/jquery.js');
+		Assets::addInlineJs('jQuery(".html-edit").ckeditor(function(){}, {
+			language: "' . str_replace('_','-',strtolower(WT_LOCALE)) . '"
+		});');
 	}
 }

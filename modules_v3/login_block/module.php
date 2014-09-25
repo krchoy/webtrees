@@ -22,6 +22,7 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 use WT\Auth;
+use WT\Assets;
 
 class login_block_WT_Module extends WT_Module implements WT_Module_Block {
 	// Extend class WT_Module
@@ -36,10 +37,10 @@ class login_block_WT_Module extends WT_Module implements WT_Module_Block {
 
 	// Implement class WT_Module_Block
 	public function getBlock($block_id, $template=true, $cfg=null) {
-		global $controller;
 		$id=$this->getName().$block_id;
 		$class=$this->getName().'_block';
-		$controller->addInlineJavascript('
+
+		Assets::addInlineJs('
 			jQuery("#new_passwd").hide();
 			jQuery("#passwd_click").click(function() {
 				jQuery("#new_passwd").slideToggle(100, function() {

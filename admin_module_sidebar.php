@@ -18,6 +18,7 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+use WT\Assets;
 use WT\Auth;
 
 define('WT_SCRIPT_NAME', 'admin_module_sidebar.php');
@@ -28,9 +29,16 @@ $controller = new WT_Controller_Page();
 $controller
 	->restrictAccess(Auth::isAdmin())
 	->setPageTitle(WT_I18N::translate('Module administration') . ' — ' . WT_I18N::translate('Sidebars'))
-	->pageHeader()
-	->addInlineJavascript('
-	jQuery("#sidebars_table").sortable({items: ".sortme", forceHelperSize: true, forcePlaceholderSize: true, opacity: 0.7, cursor: "move", axis: "y"});
+	->pageHeader();
+Assets::addInlineJs('
+	jQuery("#sidebars_table").sortable({
+		items: ".sortme",
+		forceHelperSize: true,
+		forcePlaceholderSize: true,
+		opacity: 0.7,
+		cursor: "move",
+		axis: "y"
+	});
 
 	//-- update the order numbers after drag-n-drop sorting is complete
 	jQuery("#sidebars_table").bind("sortupdate", function(event, ui) {

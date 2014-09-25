@@ -10,15 +10,6 @@ SHELL=bash
 WT_VERSION=$(shell grep "'WT_VERSION'" includes/session.php | cut -d "'" -f 4 | awk -F - '{print $$1}')
 WT_RELEASE=$(shell grep "'WT_VERSION'" includes/session.php | cut -d "'" -f 4 | awk -F - '{print $$2}')
 
-# Location of minification tools
-CLOSURE_JS=$(BUILD_DIR)/compiler-20140407.jar
-CLOSURE_CSS=$(BUILD_DIR)/closure-stylesheets-20111230.jar
-YUI_COMPRESSOR=$(BUILD_DIR)/yuicompressor-2.4.8.jar
-HTML_COMPRESSION=$(BUILD_DIR)/htmlcompressor-1.5.3.jar
-
-# Files to minify
-CSS_FILES=$(shell find $(BUILD_DIR) -name "*.css")
-JS_FILES=$(shell find $(BUILD_DIR) -name "*.js")
 # Files to mirror
 CSS_LTR_FILES=$(shell find . -name "*-ltr.css")
 CSS_RTL_FILES=$(patsubst %-ltr.css,%-rtl.css,$(CSS_LTR_FILES))
@@ -57,11 +48,6 @@ build/webtrees: clean update
 	# Add language files
 	cp -R $(LANGUAGE_DIR)/*.mo       $@/$(LANGUAGE_DIR)/
 	cp -R $(LANGUAGE_DIR)/extra/*.mo $@/$(LANGUAGE_DIR)/extra/
-	# Minification
-	find $@ -name "*.js" -exec java -jar $(CLOSURE_JS) --js "{}" --js_output_file "{}.tmp" \; -exec mv "{}.tmp" "{}" \;
-	find $@ -name "*.css" -exec java -jar $(CLOSURE_CSS) --output-file "{}.tmp" "{}" \; -exec mv "{}.tmp" "{}" \;
-	find $@ -name "*.js"  -exec java -jar $(YUI_COMPRESSOR) -o "{}" "{}" \;
-	find $@ -name "*.css" -exec java -jar $(YUI_COMPRESSOR) -o "{}" "{}" \;
 	# Zip up the release files
 	cd $(@D) && zip -qr $(@F)-$(BUILD_VERSION).zip $(@F)
 	# If we have a GNU private key, sign the file with it

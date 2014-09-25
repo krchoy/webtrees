@@ -21,6 +21,7 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+use WT\Assets;
 use WT\Auth;
 
 if (!defined('WT_WEBTREES')) {
@@ -29,12 +30,13 @@ if (!defined('WT_WEBTREES')) {
 }
 
 // This theme uses the jQuery “colorbox” plugin to display images
-$this
-	->addExternalJavascript(WT_JQUERY_COLORBOX_URL)
-	->addExternalJavascript(WT_JQUERY_WHEELZOOM_URL)
-	->addInlineJavascript('activate_colorbox();')
-	->addInlineJavascript('jQuery.extend(jQuery.colorbox.settings, {width:"85%", height:"85%", transition:"none", slideshowStart:"'. WT_I18N::translate('Play').'", slideshowStop:"'. WT_I18N::translate('Stop').'"});')
-	->addInlineJavascript('
+Assets::addCss(WT_THEME_URL . 'jquery-ui-1.10.3/jquery-ui-1.10.3.custom.css');
+Assets::addCss(WT_CSS_URL . 'style.css');
+Assets::addJs(WT_JQUERY_COLORBOX_URL);
+Assets::addJs(WT_JQUERY_WHEELZOOM_URL);
+Assets::addInlineJs('activate_colorbox();');
+Assets::addInlineJs('jQuery.extend(jQuery.colorbox.settings, {width:"85%", height:"85%", transition:"none", slideshowStart:"'. WT_I18N::translate('Play').'", slideshowStop:"'. WT_I18N::translate('Stop').'"});');
+Assets::addInlineJs('
 		jQuery.extend(jQuery.colorbox.settings, {
 			title: function() {
 				var img_title = jQuery(this).data("title");
@@ -51,8 +53,7 @@ echo
 	header_links($META_DESCRIPTION, $META_ROBOTS, $META_GENERATOR, $LINK_CANONICAL),
 	'<title>', WT_Filter::escapeHtml($title), '</title>',
 	'<link rel="icon" href="', WT_CSS_URL, 'favicon.png" type="image/png">',
-	'<link rel="stylesheet" type="text/css" href="', WT_THEME_URL, 'jquery-ui-1.10.3/jquery-ui-1.10.3.custom.css">',
-	'<link rel="stylesheet" type="text/css" href="', WT_CSS_URL, 'style.css">',
+	Assets::css(),
 	'<!--[if IE]>',
 	'<link type="text/css" rel="stylesheet" href="', WT_CSS_URL, 'msie.css">',
 	'<![endif]-->';
@@ -149,6 +150,5 @@ if ($view!='simple') { // Use "simple" headers for popup windows
 		'</div>'; // <div id="topMenu">
 }
 echo
-	$javascript,
 	WT_FlashMessages::getHtmlMessages(), // Feedback from asynchronous actions
 	'<div id="content">';

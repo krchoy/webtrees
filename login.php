@@ -22,6 +22,7 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 use Rhumsaa\Uuid\Uuid;
+use WT\Assets;
 use WT\Auth;
 use WT\Log;
 use WT\User;
@@ -132,8 +133,9 @@ case 'login':
 default:
 	$controller
 		->setPageTitle(WT_I18N::translate('Login'))
-		->pageHeader()
-		->addInlineJavascript('
+		->pageHeader();
+
+	Assets::addInlineJs('
 			jQuery("#new_passwd_form").hide();
 			jQuery("#passwd_click").click(function() {
 				jQuery("#new_passwd_form").slideToggle(100, function() {
@@ -393,8 +395,8 @@ case 'register':
 
 	$WT_SESSION->good_to_send = true;
 	$controller
-		->pageHeader()
-		->addInlineJavascript('function regex_quote(str) {return str.replace(/[\\\\.?+*()[\](){}|]/g, "\\\\$&");}');
+		->pageHeader();
+	Assets::addInlineJs('function regex_quote(str) {return str.replace(/[\\\\.?+*()[\](){}|]/g, "\\\\$&");}');
 
 	echo '<div id="login-register-page">
 		<h2>', $controller->getPageTitle(), '</h2>';

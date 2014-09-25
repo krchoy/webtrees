@@ -27,6 +27,7 @@
 require_once WT_ROOT . 'includes/functions/functions_print_lists.php';
 
 use Rhumsaa\Uuid\Uuid;
+use WT\Assets;
 use WT\Auth;
 use WT\User;
 
@@ -5027,11 +5028,9 @@ class WT_Stats {
 		if ($common) {
 			switch ($type) {
 			case 'table':
-				global $controller;
 				$table_id = Uuid::uuid4(); // lists requires a unique ID in case there are multiple lists per page
-				$controller
-					->addExternalJavascript(WT_JQUERY_DATATABLES_URL)
-					->addInlineJavascript('
+				Assets::addJs(WT_JQUERY_DATATABLES_URL);
+				Assets::addInlineJs('
 					jQuery("#' . $table_id . '").dataTable({
 						dom: \'t\',
 						autoWidth: false,

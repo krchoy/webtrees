@@ -21,6 +21,7 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+use WT\Assets;
 use WT\Auth;
 use WT\Log;
 use WT\User;
@@ -92,8 +93,8 @@ case 'send':
 switch ($action) {
 case 'compose':
 	$controller
-		->pageHeader()
-		->addInlineJavascript('
+		->pageHeader();
+	Assets::addInlineJs('
 		function checkForm(frm) {
 			if (frm.subject.value === "") {
 				alert("' . WT_I18N::translate('Please enter a message subject.') . '");
@@ -204,8 +205,8 @@ case 'send':
 		$i++;
 	}
 	$controller
-		->pageHeader()
-		->addInlineJavascript('window.opener.location.reload(); window.close();');
+		->pageHeader();
+	Assets::addInlineJs('window.opener.location.reload(); window.close();');
 	break;
 }
 

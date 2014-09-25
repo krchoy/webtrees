@@ -21,6 +21,8 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+use WT\Assets;
+
 class families_WT_Module extends WT_Module implements WT_Module_Sidebar {
 	// Extend class WT_Module
 	public function getTitle() {
@@ -78,12 +80,12 @@ class families_WT_Module extends WT_Module implements WT_Module_Sidebar {
 
 	// Implement WT_Module_Sidebar
 	public function getSidebarContent() {
-		global $WT_IMAGES, $UNKNOWN_NN, $controller;
+		global $WT_IMAGES, $UNKNOWN_NN;
 
 		// Fetch a list of the initial letters of all surnames in the database
 		$initials = WT_Query_Name::surnameAlpha(true, false, WT_GED_ID, false);
 
-		$controller->addInlineJavascript('
+		Assets::addInlineJs('
 			var famloadedNames = new Array();
 
 			function fsearchQ() {

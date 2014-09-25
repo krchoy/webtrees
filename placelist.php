@@ -21,6 +21,8 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+use WT\Assets;
+
 define('WT_SCRIPT_NAME', 'placelist.php');
 require './includes/session.php';
 require_once WT_ROOT.'includes/functions/functions_print_lists.php';
@@ -214,10 +216,9 @@ case 'hierarchy':
 		echo '<br>';
 
 		//-- display results
-		$controller
-			->addInlineJavascript('jQuery("#places-tabs").tabs();')
-			->addInlineJavascript('jQuery("#places-tabs").css("visibility", "visible");')
-			->addInlineJavascript('jQuery(".loading-image").css("display", "none");');
+		Assets::addInlineJs('jQuery("#places-tabs").tabs();');
+		Assets::addInlineJs('jQuery("#places-tabs").css("visibility", "visible");');
+		Assets::addInlineJs('jQuery(".loading-image").css("display", "none");');
 
 		echo '<div class="loading-image">&nbsp;</div>';
 		echo '<div id="places-tabs"><ul>';

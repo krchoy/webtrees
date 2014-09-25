@@ -21,6 +21,7 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+use WT\Assets;
 use WT\Auth;
 use WT\Log;
 use WT\User;
@@ -307,12 +308,11 @@ $controller->pageHeader();
 
 switch ($action) {
 case 'createform':
-	$controller
-		->addExternalJavascript(WT_STATIC_URL . 'js/autocomplete.js')
-		->addInlineJavascript('autocomplete();');
+	Assets::addJs(WT_STATIC_URL . 'js/autocomplete.js');
+	Assets::addInlineJs('autocomplete();');
 
 	init_calendar_popup();
-	$controller->addInlineJavascript('
+	Assets::addInlineJs('
 		function checkform(frm) {
 			if (frm.username.value=="") {
 				alert("'.WT_I18N::translate('You must enter a user name.').'");
@@ -587,11 +587,10 @@ default:
 			'</tbody>',
 		'</table>';
 
-	$controller
-		->addExternalJavascript(WT_JQUERY_DATATABLES_URL)
-		->addExternalJavascript(WT_JQUERY_JEDITABLE_URL)
-		->addInlineJavascript('
-			jQuery("#list").dataTable({
+	Assets::addJs(WT_JQUERY_DATATABLES_URL);
+	Assets::addJs(WT_JQUERY_JEDITABLE_URL);
+	Assets::addInlineJs('
+			var oTable = jQuery("#list").dataTable({
 				dom: \'<"H"pf<"dt-clear">irl>t<"F"pl>\',
 				' . WT_I18N::datatablesI18N() . ',
 				processing: true,

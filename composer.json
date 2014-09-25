@@ -23,6 +23,7 @@
 		"ircmaxell/password-compat": "*",
 		"michelf/php-markdown": "*",
 		"patchwork/utf8": "*",
+		"stolz/assets": "dev-gzip",
 		"tecnick.com/tcpdf": "*",
 		"rhumsaa/uuid": "*"
 	},

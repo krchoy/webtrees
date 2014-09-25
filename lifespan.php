@@ -23,15 +23,17 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+use WT\Assets;
+
 define('WT_SCRIPT_NAME', 'lifespan.php');
 require './includes/session.php';
 
 $controller = new WT_Controller_Lifespan();
-$controller
-	->pageHeader()
-	->addExternalJavascript(WT_STATIC_URL . 'js/autocomplete.js')
-	->addInlineJavascript('autocomplete();')
-	->addInlineJavascript('
+$controller->pageHeader();
+
+Assets::addJs(WT_STATIC_URL . 'js/autocomplete.js');
+Assets::addInlineJs('autocomplete();');
+Assets::addInlineJs('
 	var timer;
 	var offSetNum = 20; // amount timeline moves with each mouse click
 	var speed;
@@ -231,6 +233,6 @@ $people = count($controller->people);
 </div>
 <?php
 // Sets the boundaries for how far the timeline can move in the up direction
-$controller->addInlineJavascript('var maxY = 80-' . $maxY . ';');
+Assets::addInlineJs('var maxY = 80-' . $maxY . ';');
 // Sets the boundaries for how far the timeline can move in the left direction
-$controller->addInlineJavascript('var maxX = ' . (isset($maxX)?$maxX:0) . ';');
+Assets::addInlineJs('var maxX = ' . (isset($maxX)?$maxX:0) . ';');

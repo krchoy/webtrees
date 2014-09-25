@@ -21,6 +21,8 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+use WT\Assets;
+
 define('WT_SCRIPT_NAME', 'relationship.php');
 require './includes/session.php';
 require WT_ROOT.'includes/functions/functions_edit.php';
@@ -51,9 +53,8 @@ $Dbaseyoffset	= 0;
 $person1=WT_Individual::getInstance($pid1);
 $person2=WT_Individual::getInstance($pid2);
 
-$controller
-	->addExternalJavascript(WT_STATIC_URL . 'js/autocomplete.js')
-	->addInlineJavascript('autocomplete();');
+Assets::addJs(WT_STATIC_URL . 'js/autocomplete.js');
+Assets::addInlineJs('autocomplete();');
 
 if ($person1 && $person1->canShowName() && $person2 && $person2->canShowName()) {
 	$controller
@@ -398,7 +399,7 @@ echo '</div>'; // close #relationshippage
 // The contents of <div id="relationship_chart"> use relative positions.
 // Need to expand the div to include the children, or we'll overlap the footer.
 // $maxyoffset is the top edge of the lowest box.
-$controller->addInlineJavascript('
+Assets::addInlineJs('
 	relationship_chart_div = document.getElementById("relationship_chart");
 	if (relationship_chart_div) {
 		relationship_chart_div.style.height = "'.($maxyoffset+$Dbheight+20).'px";

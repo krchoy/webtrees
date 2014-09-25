@@ -21,6 +21,7 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+use WT\Assets;
 use WT\Auth;
 
 define('WT_SCRIPT_NAME', 'index_edit.php');
@@ -45,7 +46,7 @@ if (
 	$user_id && Auth::id() != $user_id && !Auth::isAdmin()
 ) {
 	$controller->pageHeader();
-	$controller->addInlineJavascript('window.location.reload();');
+	Assets::addInlineJs('window.location.reload();');
 	exit;
 }
 
@@ -124,9 +125,8 @@ if ($action=='update') {
 	exit;
 }
 
-$controller
-	->pageHeader()
-	->addInlineJavascript('
+$controller->pageHeader();
+Assets::addInlineJs('
 	/**
 	 * Move Up Block Javascript function
 	 *
@@ -246,11 +246,11 @@ $controller
 
 	// Load Block Description array for use by javascript
 	foreach ($all_blocks as $block_name=>$block) {
-		$controller->addInlineJavascript(
+		Assets::addInlineJs(
 			'block_descr["'.$block_name.'"] = "'.WT_Filter::escapeJs($block->getDescription()).'";'
 		);
 	}
-	$controller->addInlineJavascript(
+Assets::addInlineJs(
 		'block_descr["advice1"] = "'.WT_I18N::translate('Highlight a  block name and then click on one of the arrow icons to move that highlighted block in the indicated direction.').'";'
 	);
 
