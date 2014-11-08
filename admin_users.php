@@ -23,6 +23,7 @@
 
 use WT\Auth;
 use WT\Log;
+use WT\Theme;
 use WT\User;
 
 define('WT_SCRIPT_NAME', 'admin_users.php');
@@ -37,7 +38,7 @@ require_once WT_ROOT.'includes/functions/functions_edit.php';
 
 // Valid values for form variables
 $ALL_THEMES_DIRS=array();
-foreach (get_theme_names() as $themename=>$themedir) {
+foreach (Theme::themeNames() as $themename=>$themedir) {
 	$ALL_THEME_DIRS[]=$themedir;
 }
 $ALL_EDIT_OPTIONS=array(
@@ -205,7 +206,7 @@ case 'load1row':
 	echo '<dd>', edit_field_yes_no_inline('user_setting-'.$user_id.'-auto_accept', $user->getPreference('auto_accept')), '</dd>';
 
 	echo '<dt>', WT_I18N::translate('Theme'), '</dt>';
-	echo '<dd>', select_edit_control_inline('user_setting-'.$user_id.'-theme', array_flip(get_theme_names()), WT_I18N::translate('<default theme>'), $user->getPreference('theme')), '</dd>';
+	echo '<dd>', select_edit_control_inline('user_setting-'.$user_id.'-theme', Theme::themeNames(), WT_I18N::translate('<default theme>'), $user->getPreference('theme')), '</dd>';
 
 	echo '<dt>', WT_I18N::translate('Visible to other users when online'), '</dt>';
 	echo '<dd>', edit_field_yes_no_inline('user_setting-'.$user_id.'-visibleonline', $user->getPreference('visibleonline')), '</dd>';
@@ -413,7 +414,7 @@ case 'createform':
 					<td>
 						<select name="new_user_theme">
 						<option value="" selected="selected">', WT_Filter::escapeHtml(WT_I18N::translate('<default theme>')), '</option>';
-							foreach (get_theme_names() as $themename=>$themedir) {
+							foreach (Theme::themeNames() as $themename=>$themedir) {
 								echo '<option value="', $themedir, '">', $themename, '</option>';
 							}
 						echo '</select>

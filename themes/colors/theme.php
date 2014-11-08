@@ -22,133 +22,28 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 // PNG Icons By: Alessandro Rei; License:  GPL; www.deviantdark.com
 
-use WT\Auth;
-
-if (!defined('WT_WEBTREES')) {
-	header('HTTP/1.0 403 Forbidden');
-	exit;
-}
-// Convert a menu into our theme-specific format
-function getMenuAsCustomList($menu) {
-		// Create an inert menu - to use as a label
-		$tmp=new WT_Menu(strip_tags($menu->label), '');
-		// Insert the label into the submenu
-		if (is_array($menu->submenus)) {
-			array_unshift($menu->submenus, $tmp);
-		} else {
-			$menu->addSubmenu($tmp);
-		}
-		// Neutralise the top-level menu
-		$menu->label='';
-		$menu->onclick='';
-		$menu->iconclass='';
-		return $menu->getMenuAsList();
-}
-
-//-- print color theme sub type change dropdown box
-function color_theme_dropdown() {
-	global $COLOR_THEME_LIST, $WT_SESSION, $subColor;
-	$menu=new WT_Menu(/* I18N: A colour scheme */ WT_I18N::translate('Palette'), '#', 'menu-color');
-	uasort($COLOR_THEME_LIST, array('WT_I18N', 'strcasecmp'));
-	foreach ($COLOR_THEME_LIST as $colorChoice=>$colorName) {
-		$submenu=new WT_Menu($colorName, get_query_url(array('themecolor'=>$colorChoice), '&amp;'), 'menu-color-'.$colorChoice);
-		if (isset($WT_SESSION->subColor)) {
-			if ($WT_SESSION->subColor == $colorChoice) {
-				$submenu->addClass('','','theme-active');
-			}
-		} elseif  (WT_Site::getPreference('DEFAULT_COLOR_PALETTE') == $colorChoice) { /* here when visitor changes palette from default */
-			$submenu->addClass('','','theme-active');
-		} elseif ($subColor=='ash') { /* here when site has different theme as default and user switches to colors */
-			if ($subColor == $colorChoice) {
-				$submenu->addClass('','','theme-active');
-			}
-		}
-		$menu->addSubMenu($submenu);
-	}
-	return $menu->getMenuAsList();
-}
-
-/**
- *  Define the default palette to be used.  Set $subColor
- *  to one of the collowing values to determine the default:
- *
- */
-
-$COLOR_THEME_LIST=array(
-	'aquamarine'      => /* I18N: The name of a colour-scheme */ WT_I18N::translate('Aqua Marine'),
-	'ash'             => /* I18N: The name of a colour-scheme */ WT_I18N::translate('Ash'),
-	'belgianchocolate'=> /* I18N: The name of a colour-scheme */ WT_I18N::translate('Belgian Chocolate'),
-	'bluelagoon'      => /* I18N: The name of a colour-scheme */ WT_I18N::translate('Blue Lagoon'),
-	'bluemarine'      => /* I18N: The name of a colour-scheme */ WT_I18N::translate('Blue Marine'),
-	'coffeeandcream'  => /* I18N: The name of a colour-scheme */ WT_I18N::translate('Coffee and Cream'),
-	'coldday'         => /* I18N: The name of a colour-scheme */ WT_I18N::translate('Cold Day'),
-	'greenbeam'       => /* I18N: The name of a colour-scheme */ WT_I18N::translate('Green Beam'),
-	'mediterranio'    => /* I18N: The name of a colour-scheme */ WT_I18N::translate('Mediterranio'),
-	'mercury'         => /* I18N: The name of a colour-scheme */ WT_I18N::translate('Mercury'),
-	'nocturnal'       => /* I18N: The name of a colour-scheme */ WT_I18N::translate('Nocturnal'),
-	'olivia'          => /* I18N: The name of a colour-scheme */ WT_I18N::translate('Olivia'),
-	'pinkplastic'     => /* I18N: The name of a colour-scheme */ WT_I18N::translate('Pink Plastic'),
-	'sage'            => /* I18N: The name of a colour-scheme */ WT_I18N::translate('Sage'),
-	'shinytomato'     => /* I18N: The name of a colour-scheme */ WT_I18N::translate('Shiny Tomato'),
-	'tealtop'         => /* I18N: The name of a colour-scheme */ WT_I18N::translate('Teal Top'),
-);
-
-// If we've selected a new palette, and we are logged in, set this value as a default.
-if (isset($_GET['themecolor']) && array_key_exists($_GET['themecolor'], $COLOR_THEME_LIST)) {
-	// Request to change color
-	$subColor = $_GET['themecolor'];
-	Auth::user()->setPreference('themecolor', $subColor);
-	if (Auth::isAdmin()) {
-		WT_Site::setPreference('DEFAULT_COLOR_PALETTE', $subColor);
-	}
-	unset($_GET['themecolor']);
-	// Rember that we have selected a value
-	$WT_SESSION->subColor=$subColor;
-}
-// If we are logged in, use our preference
-$subColor = Auth::user()->getPreference('themecolor');
-// If not logged in or no preference, use one we selected earlier in the session?
-if (!$subColor) {
-	$subColor = $WT_SESSION->subColor;
-}
-// We haven't selected one this session?  Use the site default
-if (!$subColor) {
-	$subColor = WT_Site::getPreference('DEFAULT_COLOR_PALETTE');
-}
-// Make sure our selected palette actually exists
-if (!array_key_exists($subColor, $COLOR_THEME_LIST)) {
-	$subColor = 'ash';
-}
-
-// Theme name - this needs double quotes, as file is scanned/parsed by script
-$theme_name = "colors"; /* I18N: Name of a theme. */ WT_I18N::translate('colors');
-
-// A version number in the path prevents browser-cache problems during upgrade
-define('WT_CSS_URL', WT_THEME_URL . 'css-1.6.0/');
-
-$footerfile = WT_THEME_DIR . 'footer.php';
-$headerfile = WT_THEME_DIR . 'header.php';
+return new WT\Theme\Colors;
 
 $WT_IMAGES=array(
 	// used to draw charts
-	'dline'  => WT_CSS_URL . 'images/dline.png',
-	'dline2' => WT_CSS_URL . 'images/dline2.png',
-	'hline'  => WT_CSS_URL . 'images/hline.png',
-	'spacer' => WT_CSS_URL . 'images/spacer.png',
-	'vline'  => WT_CSS_URL . 'images/vline.png',
+	'dline'  => Theme::theme()->cssUrl() . 'images/dline.png',
+	'dline2' => Theme::theme()->cssUrl() . 'images/dline2.png',
+	'hline'  => Theme::theme()->cssUrl() . 'images/hline.png',
+	'spacer' => Theme::theme()->cssUrl() . 'images/spacer.png',
+	'vline'  => Theme::theme()->cssUrl() . 'images/vline.png',
 
 	// used in button images and javascript
-	'add'           => WT_CSS_URL . 'images/add.png',
-	'button_family' => WT_CSS_URL . 'images/buttons/family.png',
-	'minus'         => WT_CSS_URL . 'images/minus.png',
-	'plus'          => WT_CSS_URL . 'images/plus.png',
-	'remove'        => WT_CSS_URL . 'images/delete.png',
-	'search'        => WT_CSS_URL . 'images/go.png',
+	'add'           => Theme::theme()->cssUrl() . 'images/add.png',
+	'button_family' => Theme::theme()->cssUrl() . 'images/buttons/family.png',
+	'minus'         => Theme::theme()->cssUrl() . 'images/minus.png',
+	'plus'          => Theme::theme()->cssUrl() . 'images/plus.png',
+	'remove'        => Theme::theme()->cssUrl() . 'images/delete.png',
+	'search'        => Theme::theme()->cssUrl() . 'images/go.png',
 
 	// need different sizes before moving to CSS
-	'default_image_F' => WT_CSS_URL . 'images/silhouette_female.png',
-	'default_image_M' => WT_CSS_URL . 'images/silhouette_male.png',
-	'default_image_U' => WT_CSS_URL . 'images/silhouette_unknown.png',
+	'default_image_F' => Theme::theme()->cssUrl() . 'images/silhouette_female.png',
+	'default_image_M' => Theme::theme()->cssUrl() . 'images/silhouette_male.png',
+	'default_image_U' => Theme::theme()->cssUrl() . 'images/silhouette_unknown.png',
 );
 
 //-- Variables for the Fan chart
@@ -198,3 +93,4 @@ $WT_STATS_MAP_Y = 220;
 $WT_STATS_CHART_COLOR1 = 'ffffff';
 $WT_STATS_CHART_COLOR2 = '95b8e0';
 $WT_STATS_CHART_COLOR3 = 'c8e7ff';
+

@@ -21,7 +21,6 @@
  */
 class WT_Controller_Page extends WT_Controller_Base {
 	// Page header information
-	const     DOCTYPE = '<!DOCTYPE html>';  // HTML5
 	private $canonical_url = '';
 	private $meta_robots = 'noindex,nofollow'; // Most pages are not intended for robots
 	private $page_title = WT_WEBTREES;        // <head><title> $page_title </title></head>
@@ -44,7 +43,7 @@ class WT_Controller_Page extends WT_Controller_Base {
 	public function __destruct() {
 		// If we printed a header, automatically print a footer
 		if ($this->page_header) {
-			$this->pageFooter();
+			echo $this->pageFooter();
 		}
 	}
 
@@ -84,6 +83,15 @@ class WT_Controller_Page extends WT_Controller_Base {
 	}
 
 	/**
+	 * What is the preferred URL for this page?
+	 *
+	 * @return string
+	 */
+	public function getCanonicalUrl() {
+		return $this->canonical_url;
+	}
+
+	/**
 	 * Should robots index this page?
 	 *
 	 * @param string $meta_robots
@@ -94,6 +102,15 @@ class WT_Controller_Page extends WT_Controller_Base {
 		$this->meta_robots = $meta_robots;
 
 		return $this;
+	}
+
+	/**
+	 * Should robots index this page?
+	 *
+	 * @return string
+	 */
+	public function getMetaRobots() {
+		return $this->meta_robots;
 	}
 
 	/**
@@ -115,37 +132,19 @@ class WT_Controller_Page extends WT_Controller_Base {
 	/**
 	 * Print the page header, using the theme
 	 *
+	 * @param string $view 'simple' or ''
+	 *
 	 * @return $this
 	 */
-	public function pageHeader() {
-		// Import global variables into the local scope, for the theme’s header.php
-		global $WT_TREE, $SEARCH_SPIDER, $TEXT_DIRECTION, $REQUIRE_AUTHENTICATION, $headerfile, $view;
+	public function pageHeader($view = '') {
+		/** @var WT\Theme\BaseTheme $WT_THEME */
+		global $WT_THEME;
 
-		// The title often includes the names of records, which may have markup
-		// that cannot be used in the page title.
-		$title = html_entity_decode(strip_tags($this->page_title), ENT_QUOTES, 'UTF-8');
-
-		// Initialise variables for the theme’s header.php
-		$LINK_CANONICAL = $this->canonical_url;
-		$META_ROBOTS = $this->meta_robots;
-		$META_DESCRIPTION = $WT_TREE ? $WT_TREE->getPreference('META_DESCRIPTION') : '';
-		if (!$META_DESCRIPTION) {
-			$META_DESCRIPTION = strip_tags(WT_TREE_TITLE);
-		}
-		$META_GENERATOR = WT_WEBTREES . ' ' . WT_VERSION . ' - ' . WT_WEBTREES_URL;
-		$META_TITLE = $WT_TREE ? $WT_TREE->getPreference('META_TITLE') : '';
-		if ($META_TITLE) {
-			$title .= ' - ' . $META_TITLE;
-		}
-
-		// This javascript needs to be loaded in the header, *before* the CSS.
-		// All other javascript should be defered until the end of the page
-		$javascript = '<script src="' . WT_MODERNIZR_URL . '"></script>';
+		global $TEXT_DIRECTION;
 
 		// Give Javascript access to some PHP constants
 		$this->addInlineJavascript('
 			var WT_STATIC_URL  = "' . WT_Filter::escapeJs(WT_STATIC_URL) . '";
-			var WT_THEME_DIR   = "' . WT_Filter::escapeJs(WT_THEME_DIR) . '";
 			var WT_MODULES_DIR = "' . WT_Filter::escapeJs(WT_MODULES_DIR) . '";
 			var WT_GEDCOM      = "' . WT_Filter::escapeJs(WT_GEDCOM) . '";
 			var WT_GED_ID      = "' . WT_Filter::escapeJs(WT_GED_ID) . '";
@@ -163,8 +162,21 @@ class WT_Controller_Page extends WT_Controller_Base {
 			}
 		');
 
-		header('Content-Type: text/html; charset=UTF-8');
-		require WT_ROOT . $headerfile;
+		$WT_THEME->sendHeaders();
+		echo $WT_THEME->doctype();
+		echo $WT_THEME->html();
+		echo '<head>';
+		echo $WT_THEME->headContents($this);
+		// Modernizr needs to be loaded before the <body> to avoid FOUC in IE8
+		echo '<!--[if IE]><script src="' . WT_MODERNIZR_URL . '"></script><![endif]-->';
+		echo '</head>';
+		echo '<body>';
+
+		if ($view === '') {
+			echo $WT_THEME->headerContainer();
+		}
+		echo $WT_THEME->flashMessages();
+		echo '<div id="content" role="main">';
 
 		// Flush the output, so the browser can render the header and load javascript
 		// while we are preparing data for the page
@@ -185,22 +197,21 @@ class WT_Controller_Page extends WT_Controller_Base {
 	/**
 	 * Print the page footer, using the theme
 	 *
-	 * @return $this
+	 * @return string
 	 */
 	protected function pageFooter() {
-		global $footerfile, $WT_TREE, $TEXT_DIRECTION, $view;
+		global $start_time, $WT_THEME;
 
-		if (WT_GED_ID) {
-			require WT_ROOT . $footerfile;
-		}
-
-		if (WT_DEBUG_SQL) {
-			echo WT_DB::getQueryLog();
-		}
-		echo $this->getJavascript();
-		echo '</body></html>';
-
-		return $this;
+		return
+			'</div>' . // <div id="content">
+			$WT_THEME->footerContainer() .
+			$this->getJavascript() .
+			'</body>' .
+			'</html>' . PHP_EOL .
+			'<!-- webtrees: ' .  WT_VERSION . ' -->' .
+			'<!-- Execution time: ' .  WT_I18N::number(microtime(true) - $start_time, 3) . ' seconds -->' .
+			'<!-- Memory: ' .  WT_I18N::number(memory_get_peak_usage(true)/1024) . ' KB -->' .
+			'<!-- SQL queries: ' .  WT_I18N::number(WT_DB::getQueryCount()) . ' -->';
 	}
 
 	/**

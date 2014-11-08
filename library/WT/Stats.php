@@ -5565,14 +5565,16 @@ class WT_Stats {
 	 * @return string
 	 */
 	public function contactWebmaster() {
-		return user_contact_link($this->tree->getPreference('WEBMASTER_USER_ID'));
+		/** @var \WT\Theme\BaseTheme */
+		return Theme::theme()->contactLink(User::find($this->tree->getPreference('WEBMASTER_USER_ID')));
 	}
 
 	/**
 	 * @return string
 	 */
 	public function contactGedcom() {
-		return user_contact_link($this->tree->getPreference('CONTACT_USER_ID'));
+		/** @var \WT\Theme\BaseTheme */
+		return Theme::theme()->contactLink(User::find($this->tree->getPreference('CONTACT_USER_ID')));
 	}
 
 	/**

@@ -5242,3 +5242,7 @@ table.table-census-assistant th {
 	display: inline-block;
 	margin: 0 4px;
 }
+
+form.quick-search {
+	display: inline-block;
+}

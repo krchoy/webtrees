@@ -644,5 +644,7 @@ function old_paths() {
 		WT_ROOT.'themes/xenea/css-1.5.3',
 		// Removed in 1.6.1
 		WT_ROOT.'includes/authentication.php',
+		// Removed in 1.7.0
+		WT_ROOT.'library/WT/MenuBar.php',
 	);
 }

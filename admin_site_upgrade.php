@@ -19,6 +19,7 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 use WT\Auth;
+use WT\Theme;
 
 define('WT_SCRIPT_NAME', 'admin_site_upgrade.php');
 
@@ -220,7 +221,7 @@ echo '</li>'; flush();
 echo '<li>', /* I18N: The system is about to [...] */ WT_I18N::translate('Check for custom themes…');
 
 $custom_themes = false;
-foreach (get_theme_names() as $theme_name => $theme_folder) {
+foreach (Theme::themeNames() as $theme_name => $theme_folder) {
 	switch($theme_folder) {
 	case 'clouds':
 	case 'colors':

@@ -22,57 +22,28 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
-if (!defined('WT_WEBTREES')) {
-	header('HTTP/1.0 403 Forbidden');
-	exit;
-}
-
-// Convert a menu into our theme-specific format
-function getMenuAsCustomList($menu) {
-		// Create an inert menu - to use as a label
-		$tmp=new WT_Menu(strip_tags($menu->label), '');
-		// Insert the label into the submenu
-		if (is_array($menu->submenus)) {
-			array_unshift($menu->submenus, $tmp);
-		} else {
-			$menu->addSubmenu($tmp);
-		}
-		// Neutralise the top-level menu
-		$menu->label='';
-		$menu->onclick='';
-		$menu->iconclass='';
-		return $menu->getMenuAsList();
-}
-
-// Theme name - this needs double quotes, as file is scanned/parsed by script
-$theme_name = "clouds"; /* I18N: Name of a theme. */ WT_I18N::translate('clouds');
-
-// A version number in the path prevents browser-cache problems during upgrade
-define('WT_CSS_URL', WT_THEME_URL . 'css-1.6.0/');
-
-$headerfile = WT_THEME_DIR . 'header.php';
-$footerfile = WT_THEME_DIR . 'footer.php';
+return new WT\Theme\Clouds;
 
 $WT_IMAGES=array(
 	// used to draw charts
-	'dline'           => WT_CSS_URL .'images/dline.png',
-	'dline2'          => WT_CSS_URL .'images/dline2.png',
-	'hline'           => WT_CSS_URL .'images/hline.png',
-	'spacer'          => WT_CSS_URL .'images/spacer.png',
-	'vline'           => WT_CSS_URL .'images/vline.png',
+	'dline'           => Theme::theme()->cssUrl() .'images/dline.png',
+	'dline2'          => Theme::theme()->cssUrl() .'images/dline2.png',
+	'hline'           => Theme::theme()->cssUrl() .'images/hline.png',
+	'spacer'          => Theme::theme()->cssUrl() .'images/spacer.png',
+	'vline'           => Theme::theme()->cssUrl() .'images/vline.png',
 
 	// used in button images and javascript
-	'add'             => WT_CSS_URL .'images/add.png',
-	'button_family'   => WT_CSS_URL .'images/buttons/family.png',
-	'minus'           => WT_CSS_URL .'images/minus.png',
-	'plus'            => WT_CSS_URL .'images/plus.png',
-	'remove'          => WT_CSS_URL .'images/delete.png',
-	'search'          => WT_CSS_URL .'images/go.png',
+	'add'             => Theme::theme()->cssUrl() .'images/add.png',
+	'button_family'   => Theme::theme()->cssUrl() .'images/buttons/family.png',
+	'minus'           => Theme::theme()->cssUrl() .'images/minus.png',
+	'plus'            => Theme::theme()->cssUrl() .'images/plus.png',
+	'remove'          => Theme::theme()->cssUrl() .'images/delete.png',
+	'search'          => Theme::theme()->cssUrl() .'images/go.png',
 
 	// need different sizes before moving to CSS
-	'default_image_F' => WT_CSS_URL .'images/silhouette_female.png',
-	'default_image_M' => WT_CSS_URL .'images/silhouette_male.png',
-	'default_image_U' => WT_CSS_URL .'images/silhouette_unknown.png',
+	'default_image_F' => Theme::theme()->cssUrl() .'images/silhouette_female.png',
+	'default_image_M' => Theme::theme()->cssUrl() .'images/silhouette_male.png',
+	'default_image_U' => Theme::theme()->cssUrl() .'images/silhouette_unknown.png',
 );
 
 // Variables for the Fan chart
@@ -121,3 +92,4 @@ $WT_STATS_MAP_Y = 220;
 $WT_STATS_CHART_COLOR1 = "ffffff";
 $WT_STATS_CHART_COLOR2 = "95b8e0";
 $WT_STATS_CHART_COLOR3 = "c8e7ff";
+

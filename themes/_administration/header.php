@@ -20,11 +20,6 @@
 
 use WT\Auth;
 
-if (!defined('WT_WEBTREES')) {
-	header('HTTP/1.0 403 Forbidden');
-	exit;
-}
-
 // This theme uses the jQuery “colorbox” plugin to display images
 $this
 	->addExternalJavascript(WT_JQUERY_COLORBOX_URL)
@@ -39,26 +34,8 @@ $this
 			}
 		});
 	');
-echo
-	'<!DOCTYPE html>',
-	'<html ', WT_I18N::html_markup(), '>',
-	'<head>',
-	'<meta charset="UTF-8">',
-	'<meta http-equiv="X-UA-Compatible" content="IE=edge">',
-	'<meta name="robots" content="noindex,nofollow">',
-	'<title>', htmlspecialchars($title), '</title>',
-	'<link rel="icon" href="', WT_CSS_URL, 'favicon.png" type="image/png">',
-	'<link rel="stylesheet" href="', WT_THEME_URL, 'jquery-ui-1.10.3/jquery-ui-1.10.3.custom.css" type="text/css">',
-	'<link rel="stylesheet" href="', WT_CSS_URL, 'style.css" type="text/css">',
-	'<!--[if IE]>',
-	'<link type="text/css" rel="stylesheet" href="', WT_CSS_URL, 'msie.css">',
-	'<![endif]-->';
 
 echo
-	$javascript,
-	'</head>',
-	'<body id="body">',
-// Header
 	'<div id="admin_head" class="ui-widget-content">',
 	'<i class="icon-webtrees"></i>',
 	'<div id="title"><a href="admin.php">', WT_I18N::translate('Administration'), '</a></div>',
@@ -161,5 +138,4 @@ if (Auth::isAdmin()) {
 echo
 	'</ul>',
 	'</div>',
-	'<div id="admin_content" class="ui-widget-content">',
-	WT_FlashMessages::getHtmlMessages(); // Feedback from asynchronous actions;
+	'<div id="admin_content" class="ui-widget-content">';

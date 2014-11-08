@@ -22,6 +22,7 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 use WT\Auth;
+use WT\Theme;
 use WT\User;
 
 define('WT_SCRIPT_NAME', 'admin_trees_config.php');
@@ -478,7 +479,7 @@ $controller
 							<?php
 								echo '<option value="">', WT_Filter::escapeHtml(WT_I18N::translate('<default theme>')), '</option>';
 								$current_themedir=$WT_TREE->getPreference('THEME_DIR');
-								foreach (get_theme_names() as $themename=>$themedir) {
+								foreach (Theme::themeNames() as $themename=>$themedir) {
 									echo '<option value="', $themedir, '"';
 									if ($themedir==$current_themedir) {
 										echo ' selected="selected"';

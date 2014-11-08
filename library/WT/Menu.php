@@ -24,31 +24,31 @@
  */
 class WT_Menu {
 	/** @var string The text to be displayed in the mneu */
-	var $label = ' ';
+	private $label;
 
 	/** @var string The target URL or href*/
-	var $link = '#';
+	private $link;
 
 	/** @var string The CSS ID to be used for this menu item */
-	var $id = null;
+	private $id;
 
 	/** @var string An onclick action, typically used with a link of "#" */
-	var $onclick = null;
+	private $onclick;
 
 	/** @var WT_Menu[] */
-	var $submenus;
+	private $submenus;
 
 	/** @var string Used internally to create javascript menus */
-	var $parentmenu = null;
+	private $parentmenu;
 
 	/** @var string Used to format javascript menus */
-	var $submenuclass = '';
+	private $submenuclass;
 
 	/** @var string Used to format javascript menus */
-	var $iconclass = '';
+	private $iconclass;
 
 	/** @var string Used to format javascript menus */
-	var $class = '';
+	private $class;
 
 	/**
 	 * Constructor for the menu class
@@ -59,7 +59,7 @@ class WT_Menu {
 	 * @param string    $onclick  A javascript onclick handler
 	 * @param WT_Menu[] $submenus Any submenus
 	 */
-	function __construct($label = ' ', $link = '#', $id = '', $onclick = '', $submenus = array()) {
+	function __construct($label, $link = '#', $id = '', $onclick = '', $submenus = array()) {
 		$this
 			->setLabel($label)
 			->setLink($link)
@@ -128,20 +128,6 @@ class WT_Menu {
 	}
 
 	/**
-	 * Add a label to this menu.
-	 *
-	 * @deprecated
-	 *
-	 * @param string $label
-	 * @param string $pos
-	 */
-	function addLabel($label = ' ') {
-		if ($label) {
-			$this->label = $label;
-		}
-	}
-
-	/**
 	 * @return string
 	 */
 	public function getLink() {
@@ -160,17 +146,6 @@ class WT_Menu {
 	}
 
 	/**
-	 * Add a URL/link to this menu.
-	 *
-	 * @deprecated
-	 *
-	 * @param string $link
-	 */
-	function addLink($link = '#') {
-		$this->link = $link;
-	}
-
-	/**
 	 * @return null
 	 */
 	public function getOnclick() {
@@ -186,17 +161,6 @@ class WT_Menu {
 		$this->onclick = $onclick;
 
 		return $this;
-	}
-
-	/**
-	 * Add an onclick event to this menu.
-	 *
-	 * @deprecated
-	 *
-	 * @param $onclick
-	 */
-	function addOnclick($onclick) {
-		$this->onclick = $onclick;
 	}
 
 	/**

@@ -23,6 +23,7 @@
 
 use WT\Auth;
 use WT\Log;
+use WT\Theme;
 use WT\User;
 
 define('WT_SCRIPT_NAME', 'edituser.php');
@@ -38,7 +39,7 @@ if (!Auth::id() || !Auth::user()->getPreference('editaccount')) {
 
 // Valid values for form variables
 $ALL_THEMES_DIRS=array();
-foreach (get_theme_names() as $themename=>$themedir) {
+foreach (Theme::themeNames() as $themename=>$themedir) {
 	$ALL_THEME_DIRS[]=$themedir;
 }
 
@@ -167,7 +168,7 @@ echo '<div id="edituser-page">
 		<div class="value">
 			<select name="form_theme">
 			<option value="">', WT_Filter::escapeHtml(/* I18N: default option in list of themes */ WT_I18N::translate('<default theme>')), '</option>';
-			foreach (get_theme_names() as $themename=>$themedir) {
+			foreach (Theme::themeNames() as $themename=>$themedir) {
 				echo '<option value="', $themedir, '"';
 				if ($themedir == Auth::user()->getPreference('theme')) {
 					echo ' selected="selected"';

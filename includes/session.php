@@ -23,6 +23,7 @@
 
 use WT\Auth;
 use WT\Log;
+use WT\Theme;
 
 // WT_SCRIPT_NAME is defined in each script that the user is permitted to load.
 if (!defined('WT_SCRIPT_NAME')) {
@@ -32,9 +33,9 @@ if (!defined('WT_SCRIPT_NAME')) {
 
 // To embed webtrees code in other applications, we must explicitly declare any global variables that we create.
 // session.php
-global $start_time, $WT_REQUEST, $WT_SESSION, $WT_TREE, $GEDCOM, $SEARCH_SPIDER, $TEXT_DIRECTION;
+global $start_time, $WT_REQUEST, $WT_SESSION, $WT_TREE, $WT_THEME, $GEDCOM, $SEARCH_SPIDER, $TEXT_DIRECTION;
 // theme.php
-global $headerfile, $footerfile, $WT_IMAGES, $fanchart, $bwidth, $bheight, $baseyoffset, $basexoffset, $bxspacing, $byspacing, $linewidth, $shadowcolor, $shadowblur, $shadowoffsetX, $shadowoffsetY, $Dbaseyoffset, $Dbasexoffset, $Dbxspacing, $Dbyspacing, $Dbwidth, $Dbheight, $Dindent, $Darrowwidth, $cbwidth, $cbheight, $WT_STATS_S_CHART_X, $WT_STATS_S_CHART_Y, $WT_STATS_L_CHART_X, $WT_STATS_MAP_X, $WT_STATS_MAP_Y, $WT_STATS_CHART_COLOR1, $WT_STATS_CHART_COLOR2, $WT_STATS_CHART_COLOR3;
+global $WT_IMAGES, $fanchart, $bwidth, $bheight, $baseyoffset, $basexoffset, $bxspacing, $byspacing, $linewidth, $shadowcolor, $shadowblur, $shadowoffsetX, $shadowoffsetY, $Dbaseyoffset, $Dbasexoffset, $Dbxspacing, $Dbyspacing, $Dbwidth, $Dbheight, $Dindent, $Darrowwidth, $cbwidth, $cbheight, $WT_STATS_S_CHART_X, $WT_STATS_S_CHART_Y, $WT_STATS_L_CHART_X, $WT_STATS_MAP_X, $WT_STATS_MAP_Y, $WT_STATS_CHART_COLOR1, $WT_STATS_CHART_COLOR2, $WT_STATS_CHART_COLOR3;
 // most pages
 global $controller;
 
@@ -593,11 +594,11 @@ if (substr(WT_SCRIPT_NAME, 0, 5) == 'admin' || WT_SCRIPT_NAME == 'module.php' &&
 	if (WT_Site::getPreference('ALLOW_USER_THEMES')) {
 		// Requested change of theme?
 		$THEME_DIR = WT_Filter::get('theme');
-		if (!in_array($THEME_DIR, get_theme_names())) {
+		if (!in_array($THEME_DIR, Theme::themeNames())) {
 			$THEME_DIR = '';
 		}
 		// Last theme used?
-		if (!$THEME_DIR && in_array($WT_SESSION->theme_dir, get_theme_names())) {
+		if (!$THEME_DIR && in_array($WT_SESSION->theme_dir, Theme::themeNames())) {
 			$THEME_DIR = $WT_SESSION->theme_dir;
 		}
 	} else {
@@ -612,14 +613,14 @@ if (substr(WT_SCRIPT_NAME, 0, 5) == 'admin' || WT_SCRIPT_NAME == 'module.php' &&
 		if (WT_GED_ID) {
 			$THEME_DIR = $WT_TREE->getPreference('THEME_DIR');
 		}
-		if (!in_array($THEME_DIR, get_theme_names())) {
+		if (!in_array($THEME_DIR, Theme::themeNames())) {
 			$THEME_DIR = WT_Site::getPreference('THEME_DIR');
 		}
-		if (!in_array($THEME_DIR, get_theme_names())) {
+		if (!in_array($THEME_DIR, Theme::themeNames())) {
 			$THEME_DIR = 'webtrees';
 		}
-		if (!in_array($THEME_DIR, get_theme_names())) {
-			list($THEME_DIR) = get_theme_names();
+		if (!in_array($THEME_DIR, Theme::themeNames())) {
+			list($THEME_DIR) = Theme::themeNames();
 		}
 	}
 	define('WT_THEME_DIR', WT_THEMES_DIR . $THEME_DIR . '/');
@@ -628,10 +629,9 @@ if (substr(WT_SCRIPT_NAME, 0, 5) == 'admin' || WT_SCRIPT_NAME == 'module.php' &&
 		$WT_SESSION->theme_dir = $THEME_DIR;
 	}
 }
-// If we have specified a CDN, use it for static theme resources
-define('WT_THEME_URL', WT_STATIC_URL . WT_THEME_DIR);
-
-require WT_ROOT . WT_THEME_DIR . 'theme.php';
+/** @var WT\Theme\BaseTheme A theme object, which we will use to customise the display */
+$WT_THEME = require WT_ROOT . WT_THEME_DIR . 'theme.php';
+$WT_THEME->init($WT_TREE, $WT_SESSION);
 
 // Page hit counter - load after theme, as we need theme formatting
 if ($WT_TREE && $WT_TREE->getPreference('SHOW_COUNTER') && !$SEARCH_SPIDER) {

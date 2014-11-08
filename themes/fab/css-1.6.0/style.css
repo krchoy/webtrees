@@ -3998,3 +3998,15 @@ table.table-census-assistant th {
 	display: inline-block;
 	margin: 0 4px;
 }
+
+form.quick-search {
+	display: inline-block;
+}
+
+form.quick-search input[type=image] {
+	display: none;
+}
+
+#menu-pending a {
+	color: #f00;
+}

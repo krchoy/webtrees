@@ -34,12 +34,14 @@ class theme_select_WT_Module extends WT_Module implements WT_Module_Block {
 
 	// Implement class WT_Module_Block
 	public function getBlock($block_id, $template=true, $cfg=null) {
+		/** @var \WT\Theme\BaseTheme */
 		$id=$this->getName().$block_id;
 		$class=$this->getName().'_block';
 		$title=$this->getTitle();
-		$menu=WT_MenuBar::getThemeMenu();
+		$menu=Theme::theme()->menuThemes();
+
 		if ($menu) {
-			$content='<div class="center theme_form">'.WT_MenuBar::getThemeMenu().'</div><br>';
+			$content='<div class="center theme_form">' . $menu . '</div><br>';
 
 			if ($template) {
 				require WT_THEME_DIR.'templates/block_main_temp.php';

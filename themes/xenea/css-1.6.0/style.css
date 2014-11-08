@@ -5434,3 +5434,15 @@ table.table-census-assistant th {
 [dir=rtl] .btn-group button:first-child {
 	border-radius: 0 3px 3px 0;
 }
+
+form.quick-search {
+	display: inline-block;
+}
+
+form.quick-search input[type=image] {
+	display: none;
+}
+
+#menu-pending a {
+	color: #f00;
+}

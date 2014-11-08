@@ -2808,11 +2808,11 @@ div.faq_body {
 }
 
 #menu-obje-link-indi {
-	background-position: left -300px;
+	background-position: left -120px;
 }
 
 [dir=rtl] #menu-obje-link-indi {
-	background-position: right -300px;
+	background-position: right -120px;
 }
 
 #menu-obje-link-sour {
@@ -5279,4 +5279,13 @@ table.table-census-assistant th {
 .btn-group button:last-child,
 [dir=rtl] .btn-group button:first-child {
 	border-radius: 0 3px 3px 0;
+}
+
+.pending-changes-link {
+	margin: 12px;
+}
+
+.pending-changes-link a {
+	font-weight: bold;
+	color: #f00;
 }

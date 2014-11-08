@@ -34,13 +34,17 @@ class WT_Controller_Simple extends WT_Controller_Page {
 	 *
 	 * @return WT_Controller_Simple
 	 */
-	public function pageHeader() {
-		global $view;
+	public function pageFooter($view = 'simple') {
+		return parent::pageFooter($view);
+	}
 
-		$view = 'simple';
-		parent::pageHeader();
-
-		return $this;
+	/**
+	 * Simple (i.e. popup) windows are deprecated.
+	 *
+	 * @return WT_Controller_Simple
+	 */
+	public function pageHeader($view = 'simple') {
+		return parent::pageHeader($view);
 	}
 
 	/**
