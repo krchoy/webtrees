@@ -119,7 +119,7 @@ class WT_Menu {
 	/**
 	 * @param string $label
 	 *
-	 * @return $this;
+	 * @return $this
 	 */
 	public function setLabel($label) {
 		$this->label = $label;
