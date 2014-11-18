@@ -22,6 +22,7 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 use WT\Auth;
+use WT\Theme;
 
 class lightbox_WT_Module extends WT_Module implements WT_Module_Tab {
 	private $media_list;
@@ -56,26 +57,26 @@ class lightbox_WT_Module extends WT_Module implements WT_Module_Tab {
 	public function getTabContent() {
 		global $WT_TREE, $controller;
 
-		$html='<div id="'.$this->getName().'_content">';
+		$html='<div id="' . $this->getName() . '_content">';
 		//Show Lightbox-Album header Links
 		if (WT_USER_CAN_EDIT) {
 			$html.='<table class="facts_table"><tr><td class="descriptionbox rela">';
 			// Add a new media object
 			if ($WT_TREE->getPreference('MEDIA_UPLOAD') >= WT_USER_ACCESS_LEVEL) {
 				$html .= '<span><a href="#" onclick="window.open(\'addmedia.php?action=showmediaform&linktoid='.$controller->record->getXref().'\', \'_blank\', \'resizable=1,scrollbars=1,top=50,height=780,width=600\');return false;">';
-				$html .= '<img src="'.Theme::theme()->cssUrl().'images/image_add.png" id="head_icon" class="icon" title="'.WT_I18N::translate('Add a new media object').'" alt="'.WT_I18N::translate('Add a new media object').'">';
+				$html .= '<img src="' . Theme::theme()->cssUrl() . 'images/image_add.png" id="head_icon" class="icon" title="'.WT_I18N::translate('Add a new media object').'" alt="'.WT_I18N::translate('Add a new media object').'">';
 				$html .= WT_I18N::translate('Add a new media object');
 				$html .= '</a></span>';
 				// Link to an existing item
 				$html .= '<span><a href="#" onclick="window.open(\'inverselink.php?linktoid='.$controller->record->getXref().'&linkto=person\', \'_blank\', \'resizable=1,scrollbars=1,top=50,height=300,width=450\');">';
-				$html .= '<img src="'.Theme::theme()->cssUrl().'images/image_link.png" id="head_icon" class="icon" title="'.WT_I18N::translate('Link to an existing media object').'" alt="'.WT_I18N::translate('Link to an existing media object').'">';
+				$html .= '<img src="' . Theme::theme()->cssUrl() . 'images/image_link.png" id="head_icon" class="icon" title="'.WT_I18N::translate('Link to an existing media object').'" alt="'.WT_I18N::translate('Link to an existing media object').'">';
 				$html .= WT_I18N::translate('Link to an existing media object');
 				$html .= '</a></span>';
 			}
 			if (WT_USER_GEDCOM_ADMIN && $this->get_media()) {
 				// Popup Reorder Media
 				$html .= '<span><a href="#" onclick="reorder_media(\''.$controller->record->getXref().'\')">';
-				$html .= '<img src="'.Theme::theme()->cssUrl().'images/images.png" id="head_icon" class="icon" title="'.WT_I18N::translate('Re-order media').'" alt="'.WT_I18N::translate('Re-order media').'">';
+				$html .= '<img src="' . Theme::theme()->cssUrl() . 'images/images.png" id="head_icon" class="icon" title="'.WT_I18N::translate('Re-order media').'" alt="'.WT_I18N::translate('Re-order media').'">';
 				$html .= WT_I18N::translate('Re-order media');
 				$html .= '</a></span>';
 			}
