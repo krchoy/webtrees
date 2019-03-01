@@ -1,0 +1,7 @@
+<?php use Fisharebest\Webtrees\I18N; ?>
+
+<?php if ($count > 0) : ?>
+    <span class="badge badge-<?= $context ?? 'secondary' ?>">
+        <?= I18N::number($count) ?>
+    </span>
+<?php endif ?>

@@ -1,0 +1,51 @@
+<?php
+declare(strict_types=1);
+
+use Fisharebest\Webtrees\I18N;
+
+$id = 'google-chart-' . bin2hex(random_bytes(8));
+?>
+
+<?php if (count($data) === 1): ?>
+    <?= I18N::translate('This information is not available.'); ?>
+<?php else: ?>
+
+    <?= view('statistics/other/chart-setup') ?>
+
+    <div id="<?= $id ?>"></div>
+
+    <script>
+
+    var callbackPieChart = function () {
+        google.charts.setOnLoadCallback(function () {
+            drawPieChart(
+                '<?= $id ?>',
+                <?= json_encode($data) ?>,
+                <?= json_encode($colors) ?>,
+                '<?= $title ?>',
+                '<?= $labeledValueText ?? 'value' ?>'
+            );
+        });
+
+        $(window).resize(function () {
+            drawPieChart(
+                '<?= $id ?>',
+                <?= json_encode($data) ?>,
+                <?= json_encode($colors) ?>,
+                '<?= $title ?>',
+                '<?= $labeledValueText ?? 'value' ?>'
+            );
+        });
+    };
+
+    if (
+        document.readyState === "complete" ||
+        (document.readyState !== "loading" && !document.documentElement.doScroll)
+    ) {
+        callbackPieChart();
+    } else {
+        document.addEventListener("DOMContentLoaded", callbackPieChart);
+    }
+
+    </script>
+<?php endif; ?>

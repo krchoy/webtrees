@@ -1,0 +1,96 @@
+<?php use Fisharebest\Webtrees\Functions\FunctionsPrint; ?>
+<?php use Fisharebest\Webtrees\I18N; ?>
+
+<div class="text-center slide-show-container">
+    <?php if ($show_controls) : ?>
+        <div class="slide-show-controls">
+            <a href="#" title="<?= I18N::translate('Play') ?>" <?= $start_automatically ? 'hidden' : '' ?>>
+                <?= view('icons/media-play') ?>
+                <span class="sr-only"><?= I18N::translate('Play') ?></span>
+            </a>
+            <a href="#" title="<?= I18N::translate('Stop') ?>" <?= $start_automatically ? '' : 'hidden' ?>>
+                <?= view('icons/media-stop') ?>
+                <span class="sr-only"><?= I18N::translate('Stop') ?></span>
+            </a>
+            <a href="#" title="<?= I18N::translate('Next image') ?>">
+                <?= view('icons/media-next') ?>
+                <span class="sr-only"><?= I18N::translate('Next image') ?></span>
+            </a>
+        </div>
+    <?php endif ?>
+
+    <figure class="text-center slide-show-figure">
+        <?= $media_file->displayImage(200, 200, '', ['class' => 'slide-show-image']) ?>
+        <figcaption class="slide-show-figcaption">
+            <a href="<?= e($media->url()) ?>">
+                <b><?= $media->fullName() ?></b>
+            </a>
+        </figcaption>
+    </figure>
+
+    <p class="slide-show-notes">
+        <?= FunctionsPrint::printFactNotes($tree, $media->gedcom(), 1) ?>
+    </p>
+
+    <ul class="slide-show-links">
+        <?php foreach ($media->linkedIndividuals('OBJE') as $individual) : ?>
+            <?= I18N::translate('Individual') ?> —
+            <a href="<?= e($individual->url()) ?>" class="slide-show-link">
+                <?= $individual->fullName() ?>
+            </a>
+            <br>
+        <?php endforeach ?>
+
+        <?php foreach ($media->linkedFamilies('OBJE') as $family) : ?>
+            <?= I18N::translate('View this family') ?> —
+            <a href="<?= e($family->url()) ?>" class="slide-show-link">
+                <?= $family->fullName() ?>
+            </a>
+            <br>
+        <?php endforeach ?>
+
+        <?php foreach ($media->linkedSources('OBJE') as $source) : ?>
+            <?= I18N::translate('View this source') ?> —
+            <a href="<?= e($source->url()) ?>" class="slide-show-link">
+                <?= $source->fullName() ?>
+            </a>
+            <br>
+        <?php endforeach ?>
+    </ul>
+</div>
+
+<script>
+    // Reload automatically?
+    var play = <?= json_encode($start_automatically); ?>;
+
+    function slideShowReload() {
+        if (play) {
+            var block = $("#block-<?= $block_id ?>").parent();
+            clearTimeout(timeout);
+            block.load(block.data('ajaxUrl') + '&start=' + (play ? '1' : '0'));
+        }
+
+        return false;
+    }
+
+    $(".wt-icon-media-play").on('click', function () {
+        $(".wt-icon-media-play").parent().attr('hidden', true);
+        $(".wt-icon-media-stop").parent().attr('hidden', false);
+        play = true;
+        return slideShowReload();
+    });
+
+    $(".wt-icon-media-stop").on('click', function () {
+        $(".wt-icon-media-stop").parent().attr('hidden', true);
+        $(".wt-icon-media-play").parent().attr('hidden', false);
+        play = false;
+        return false;
+    });
+
+    $(".wt-icon-media-next").on('click', function () {
+        play = true;
+        return slideShowReload();
+    });
+
+    var timeout = setTimeout(slideShowReload, 6000);
+</script>

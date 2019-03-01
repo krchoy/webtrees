@@ -1,3 +1,6 @@
-*.swp
-.idea/
-vendor/.git
+/.php_cs.cache
+/apidocs/
+/public/mix-manifest.json
+/public/js/*.map
+/node_modules/
+/robots.txt

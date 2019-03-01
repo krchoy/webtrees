@@ -1,0 +1,155 @@
+<?php use Fisharebest\Webtrees\Auth; ?>
+<?php use Fisharebest\Webtrees\DebugBar; ?>
+<?php use Fisharebest\Webtrees\FlashMessages; ?>
+<?php use Fisharebest\Webtrees\I18N; ?>
+<?php use Fisharebest\Webtrees\Module\ModuleAnalyticsInterface; ?>
+<?php use Fisharebest\Webtrees\Module\ModuleFooterInterface; ?>
+<?php use Fisharebest\Webtrees\Module\ModuleThemeInterface; ?>
+<?php use Fisharebest\Webtrees\Services\ModuleService; ?>
+<?php use Fisharebest\Webtrees\View; ?>
+<?php use Fisharebest\Webtrees\Webtrees; ?>
+<?php use Symfony\Component\HttpFoundation\Request; ?>
+
+<!DOCTYPE html>
+<html dir="<?= I18N::direction() ?>" lang="<?= WT_LOCALE ?>">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="csrf" content="<?= e(csrf_token()) ?>">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="<?= e($meta_robots ?? 'noindex') ?>">
+        <meta name="generator" content="<?= e(Webtrees::NAME) ?> <?= e(Webtrees::VERSION) ?>">
+        <?php if ($tree !== null) : ?>
+            <meta name="description" content="<?= e($tree->getPreference('META_DESCRIPTION')) ?>">
+        <?php endif ?>
+
+        <title>
+            <?= strip_tags($title) ?>
+            <?php if ($tree !== null && $tree->getPreference('META_TITLE') !== '') : ?>
+                – <?= e($tree->getPreference('META_TITLE')) ?>
+            <?php endif ?>
+        </title>
+
+        <!--Generic favicons-->
+        <link rel="icon" sizes="32x32" href="<?= e(asset('favicon-32.png')) ?>">
+        <link rel="icon" sizes="57x57" href="<?= e(asset('favicon-57.png')) ?>">
+        <link rel="icon" sizes="76x76" href="<?= e(asset('favicon-76.png')) ?>">
+        <link rel="icon" sizes="96x96" href="<?= e(asset('favicon-96.png')) ?>">
+        <link rel="icon" sizes="128x128" href="<?= e(asset('favicon-128.png')) ?>">
+        <link rel="icon" sizes="192x192" href="<?= e(asset('favicon-192.png')) ?>">
+        <!--Android-->
+        <link rel="shortcut icon" sizes="196x196" href="<?= e(asset('favicon-196.png')) ?>">
+        <!--iOS-->
+        <link rel="apple-touch-icon" sizes="120x120" href="<?= e(asset('favicon-120.png')) ?>">
+        <link rel="apple-touch-icon" sizes="152x152" href="<?= e(asset('favicon-152.png')) ?>">
+        <link rel="apple-touch-icon" sizes="180x180" href="<?= e(asset('favicon-180.png')) ?>">
+        <!--Windows 8 IE 10-->
+        <meta name="msapplication-TileColor" content="#FFFFFF">
+        <meta name="msapplication-TileImage" content="<?= e(asset('favicon-144.png')) ?>">
+        <!--Windows 8.1 + IE11 and above-->
+        <meta name="msapplication-config" content="<?= e(asset('browserconfig.xml')) ?>">
+
+        <link rel="stylesheet" href="<?= e(asset('css/vendor.min.css')) ?>">
+        <?php foreach (app()->make(ModuleThemeInterface::class)->stylesheets() as $stylesheet) : ?>
+            <link rel="stylesheet" href="<?=  e($stylesheet) ?>">
+        <?php endforeach ?>
+
+        <?= View::stack('styles') ?>
+
+        <?= app()->make(ModuleService::class)->findByInterface(ModuleAnalyticsInterface::class)->filter(function (ModuleAnalyticsInterface $module): bool { return $module->analyticsCanShow(); })->map(function (ModuleAnalyticsInterface $module): string { return $module->analyticsSnippet($module->analyticsParameters()); })->implode('') ?>
+
+        <?= DebugBar::renderHead() ?>
+    </head>
+
+    <body class="wt-global wt-theme-<?= e(app()->make(ModuleThemeInterface::class)->name()) ?> wt-route-<?= e(e(app()->make(Request::class)->get('route'))) ?>">
+        <header class="wt-header-wrapper d-print-none">
+            <div class="container wt-header-container">
+                <div class="row wt-header-content">
+                    <div class="wt-accessibility-links position-fixed">
+                        <a class="sr-only sr-only-focusable btn btn-info btn-sm" href="#content">
+                            <?= /* I18N: Skip over the headers and menus, to the main content of the page */ I18N::translate('Skip to content') ?>
+                        </a>
+                    </div>
+                    <div class="col wt-site-logo"></div>
+
+                    <?php if ($tree !== null) : ?>
+                        <h1 class="col wt-site-title"><?= e($tree->title()) ?></h1>
+
+                        <div class="col wt-header-search">
+                            <form class="wt-header-search-form" role="search">
+                                <input type="hidden" name="route" value="search-quick">
+                                <input type="hidden" name="ged" value="<?= e($tree->name()) ?>">
+                                <div class="input-group">
+                                    <label class="sr-only" for="quick-search"><?= I18N::translate('Search') ?></label>
+                                    <input type="search" class="form-control wt-header-search-field" id="quick-search" name="query" size="15" placeholder="<?= I18N::translate('Search') ?>">
+                                    <span class="input-group-btn">
+                                        <button type="submit" class="btn btn-primary wt-header-search-button">
+                                            <?= view('icons/search') ?>
+                                        </button>
+                                    </span>
+                                </div>
+                            </form>
+                        </div>
+                    <?php endif ?>
+
+                    <div class="col wt-secondary-navigation">
+                        <ul class="nav wt-secondary-menu">
+                            <?php foreach (app()->make(ModuleThemeInterface::class)->secondaryMenu() as $menu) : ?>
+                                <?= $menu->bootstrap4() ?>
+                            <?php endforeach ?>
+                        </ul>
+                    </div>
+
+                    <?php if ($tree !== null) : ?>
+                    <nav class="col wt-primary-navigation">
+                        <ul class="nav wt-primary-menu">
+                            <?php foreach (app()->make(ModuleThemeInterface::class)->primaryMenu($individual ?? $tree->significantIndividual(Auth::user())) as $menu) : ?>
+                                <?= $menu->bootstrap4() ?>
+                            <?php endforeach ?>
+                        </ul>
+                    </nav>
+                    <?php endif ?>
+                </div>
+            </div>
+        </header>
+
+        <main id="content" class="wt-main-wrapper">
+            <div class="container wt-main-container">
+                <div class="flash-messages">
+                    <?php foreach (FlashMessages::getMessages() as $message) : ?>
+                        <div class="alert alert-<?= e($message->status) ?> alert-dismissible" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="<?= I18N::translate('close') ?>">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <?= $message->text ?>
+                        </div>
+                    <?php endforeach ?>
+                </div>
+
+                <?= $content ?>
+            </div>
+        </main>
+
+        <footer class="wt-footers container d-print-none">
+            <?= app()->make(ModuleService::class)->findByInterface(ModuleFooterInterface::class)->map(function (ModuleFooterInterface $module) use ($tree): string { return app()->dispatch($module, 'getFooter'); })->implode('') ?>
+        </footer>
+
+        <script src="<?= e(asset('js/vendor.min.js')) ?>"></script>
+        <script src="<?= e(asset('js/webtrees.min.js')) ?>"></script>
+
+        <script>
+      activate_colorbox();
+      jQuery.extend(jQuery.colorbox.settings, {
+       width: "85%",
+       height: "85%",
+       transition: "none",
+       slideshowStart: "<?= I18N::translate('Play') ?>",
+       slideshowStop: "<?= I18N::translate('Stop') ?>",
+       title: function() { return this.dataset.title; }
+      });
+    </script>
+
+        <?= View::stack('javascript') ?>
+
+        <?= DebugBar::render() ?>
+    </body>
+</html>

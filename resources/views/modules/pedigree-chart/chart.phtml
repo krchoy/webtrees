@@ -1,0 +1,16 @@
+<?php
+
+use Fisharebest\Webtrees\Individual;
+use Illuminate\Support\Collection;
+
+/**
+ * @var Collection|Individual[] $ancestors
+ * @var int                     $generations
+ * @var Collection|string[]     $links
+ * @var string                  $orientation
+ */
+?>
+
+<div class="wt-chart-pedigree-<?= e($orientation) ?>">
+    <?= view('modules/pedigree-chart/chart-' . $orientation, ['ancestors' => $ancestors, 'sosa' => 1, 'generation' => 1, 'generations' => $generations, 'links' => $links]) ?>
+</div>

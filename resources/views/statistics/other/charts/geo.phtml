@@ -1,0 +1,71 @@
+<?php
+declare(strict_types=1);
+
+use Fisharebest\Webtrees\I18N;
+
+$id = 'google-chart-' . bin2hex(random_bytes(8));
+?>
+
+<?php if (count($data) === 1): ?>
+    <?= I18N::translate('This information is not available.'); ?>
+<?php else: ?>
+
+    <?= view('statistics/other/chart-setup') ?>
+
+    <div class="mb-3">
+        <div class="card-deck">
+            <div class="col-12 mb-3">
+                <div class="card m-0">
+                    <div class="card-header">
+                        <?= $chart_title ?>
+                    </div>
+                    <div class="card-body">
+                        <div id="<?= $id ?>" title="<?= $chart_title ?>"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+    var callbackGeoChart = function () {
+        var options = {
+            title: '<?= $chart_title ?>',
+            region: '<?= $region ?>',
+            colorAxis: {
+                colors: [
+                    '#<?= $chart_color3 ?>',
+                    '#<?= $chart_color2 ?>'
+                ]
+            }
+        };
+
+        google.charts.setOnLoadCallback(function () {
+            drawGeoChart(
+                '<?= $id ?>',
+                <?= json_encode($data) ?>,
+                options
+            );
+        });
+
+        $(window).resize(function () {
+            drawGeoChart(
+                '<?= $id ?>',
+                <?= json_encode($data) ?>,
+                options
+            );
+        });
+    };
+
+    if (
+        document.readyState === "complete" ||
+        (document.readyState !== "loading" && !document.documentElement.doScroll)
+    ) {
+        callbackGeoChart();
+    } else {
+        document.addEventListener("DOMContentLoaded", callbackGeoChart);
+    }
+
+    </script>
+<?php endif; ?>

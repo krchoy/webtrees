@@ -1,0 +1,162 @@
+<?php
+/**
+ * webtrees: online genealogy
+ * Copyright (C) 2019 webtrees development team
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+declare(strict_types=1);
+
+namespace Fisharebest\Webtrees;
+
+use Closure;
+use Illuminate\Database\Capsule\Manager as DB;
+use Illuminate\Support\Str;
+use stdClass;
+
+/**
+ * A GEDCOM note (NOTE) object.
+ */
+class Note extends GedcomRecord
+{
+    public const RECORD_TYPE = 'NOTE';
+
+    protected const ROUTE_NAME = 'note';
+
+    /**
+     * A closure which will create a record from a database row.
+     *
+     * @return Closure
+     */
+    public static function rowMapper(): Closure
+    {
+        return function (stdClass $row): Note {
+            return Note::getInstance($row->o_id, Tree::findById((int) $row->o_file), $row->o_gedcom);
+        };
+    }
+
+    /**
+     * Get an instance of a note object. For single records,
+     * we just receive the XREF. For bulk records (such as lists
+     * and search results) we can receive the GEDCOM data as well.
+     *
+     * @param string      $xref
+     * @param Tree        $tree
+     * @param string|null $gedcom
+     *
+     * @throws \Exception
+     *
+     * @return Note|null
+     */
+    public static function getInstance(string $xref, Tree $tree, string $gedcom = null)
+    {
+        $record = parent::getInstance($xref, $tree, $gedcom);
+
+        if ($record instanceof Note) {
+            return $record;
+        }
+
+        return null;
+    }
+
+    /**
+     * Get the text contents of the note
+     *
+     * @return string
+     */
+    public function getNote()
+    {
+        if (preg_match('/^0 @' . Gedcom::REGEX_XREF . '@ NOTE ?(.*(?:\n1 CONT ?.*)*)/', $this->gedcom . $this->pending, $match)) {
+            return preg_replace("/\n1 CONT ?/", "\n", $match[1]);
+        }
+
+        return '';
+    }
+
+    /**
+     * Each object type may have its own special rules, and re-implement this function.
+     *
+     * @param int $access_level
+     *
+     * @return bool
+     */
+    protected function canShowByType(int $access_level): bool
+    {
+        // Hide notes if they are attached to private records
+        $linked_ids = DB::table('link')
+            ->where('l_file', '=', $this->tree->id())
+            ->where('l_to', '=', $this->xref)
+            ->pluck('l_from');
+
+        foreach ($linked_ids as $linked_id) {
+            $linked_record = GedcomRecord::getInstance($linked_id, $this->tree);
+            if ($linked_record && !$linked_record->canShow($access_level)) {
+                return false;
+            }
+        }
+
+        // Apply default behaviour
+        return parent::canShowByType($access_level);
+    }
+
+    /**
+     * Generate a private version of this record
+     *
+     * @param int $access_level
+     *
+     * @return string
+     */
+    protected function createPrivateGedcomRecord(int $access_level): string
+    {
+        return '0 @' . $this->xref . '@ NOTE ' . I18N::translate('Private');
+    }
+
+    /**
+     * Fetch data from the database
+     *
+     * @param string $xref
+     * @param int    $tree_id
+     *
+     * @return null|string
+     */
+    protected static function fetchGedcomRecord(string $xref, int $tree_id)
+    {
+        return DB::table('other')
+            ->where('o_id', '=', $xref)
+            ->where('o_file', '=', $tree_id)
+            ->where('o_type', '=', self::RECORD_TYPE)
+            ->value('o_gedcom');
+    }
+
+    /**
+     * Create a name for this note - apply (and remove) markup, then take
+     * a maximum of 100 characters from the first line.
+     *
+     * @return void
+     */
+    public function extractNames()
+    {
+        $text = $this->getNote();
+
+        if ($text) {
+            switch ($this->tree()->getPreference('FORMAT_TEXT')) {
+                case 'markdown':
+                    $text = Filter::markdown($text, $this->tree());
+                    $text = strip_tags($text);
+                    $text = html_entity_decode($text, ENT_QUOTES, 'UTF-8');
+                    break;
+            }
+
+            [$text] = explode("\n", $text);
+            $this->addName('NOTE', Str::limit($text, 100, I18N::translate('…')), $this->gedcom());
+        }
+    }
+}

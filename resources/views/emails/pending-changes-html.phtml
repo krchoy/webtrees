@@ -1,0 +1,16 @@
+<?php use Fisharebest\Webtrees\I18N; ?>
+<p>
+    <?= e(I18N::translate('Hello %s…', $user->realName())) ?>
+</p>
+
+<p>
+    <?= I18N::translate('There are pending changes for you to moderate.') ?>
+</p>
+
+<ul>
+    <li>
+        <a href="<?= e(route('show-pending', ['ged' => $tree->name()], true)) ?>">
+            <?= e($tree->title()) ?>
+        </a>
+    </li>
+</ul>

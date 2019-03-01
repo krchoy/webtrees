@@ -1,0 +1,44 @@
+<?php use Fisharebest\Webtrees\I18N; ?>
+
+<div id="place-hierarchy">
+    <div class="container">
+        <h4><?= $title ?></h4>
+        <h5 class="text-center">
+            <?php if ($current) : ?>
+                <a href="<?= e(route('module', ['module' => $module, 'action' => $action, 'ged' => $tree->name()])) ?>">
+                    <?= I18N::translate('World') ?>
+                </a>
+            <?php else : ?>
+                <?= I18N::translate('World') ?>
+            <?php endif ?>
+
+            <?php foreach ($breadcrumbs as $item) : ?>
+                -
+                <a href="<?= e($item->url()) ?>" dir="auto"><?= $item->placeName() ?></a>
+            <?php endforeach ?>
+
+            <?php if ($current) : ?>
+                - <?= $current->placeName() ?>
+            <?php endif ?>
+        </h5>
+        <?php if ($note) : ?>
+            <div class="text-center small text-muted">
+                <?= I18N::translate("Places without valid co-ordinates are not shown on the map and have a red border around the sidebar entry") ?>
+            </div>
+        <?php endif ?>
+        <?= $content ?>
+        <div class="text-center">
+            <?php if ($showeventslink) : ?>
+                <a class="formField" href= <?= e(route('module', ['module' => $module, 'action' => $action, 'ged' => $tree->name(), 'parent' => $parent, 'action2' => 'hierarchy-e'])) ?>>
+                    <?= I18N::translate('View table of events occurring in %s', $place) ?>
+                </a>
+                |
+            <?php endif ?>
+
+            <a href="<?= e(route('module', ['module' => $module, 'action' => $action, 'ged' => $tree->name(), 'action2' => key($nextaction)])) ?>">
+                <?= current($nextaction) ?>
+            </a>
+        </div>
+    </div>
+</div>
+

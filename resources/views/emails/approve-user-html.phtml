@@ -1,0 +1,8 @@
+<?php use Fisharebest\Webtrees\I18N; ?>
+<p>
+    <?= I18N::translate('Hello %s…', e($user->realName())) ?>
+</p>
+
+<p>
+    <?= I18N::translate('The administrator at the webtrees site %s has approved your application for an account. You may now sign in by accessing the following link: %s', e($site_url), e($site_url)) ?>
+</p>
